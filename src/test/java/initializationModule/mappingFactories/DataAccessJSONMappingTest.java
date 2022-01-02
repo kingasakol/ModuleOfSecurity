@@ -22,8 +22,8 @@ public class DataAccessJSONMappingTest {
 
         @BeforeEach
         public void init() throws URISyntaxException {
-            this.JSONPath = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/dataAccessExampleJSONFile.json").toURI()).toString();
-            this.JSONPathWithDoubledID = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/dataAccessExampleJSONFileWithDoubledID.json").toURI()).toString();
+            this.JSONPath = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/exampleJSONs/validJSONs/dataAccessExampleJSONFile.json").toURI()).toString();
+            this.JSONPathWithDoubledID = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/exampleJSONs/corruptedJSONs/dataAccessExampleJSONFileWithDoubledID.json").toURI()).toString();
         }
 
         @Test

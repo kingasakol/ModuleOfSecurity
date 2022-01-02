@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "entityName": "JakasKlasa",
+      "allowedRoles": [
+        "ksiegowa", "prezesi", "admin", "hacker"
+      ]
+    },
+    {
+      "entityName": "JakasInnaKlasa",
+      "allowedRoles": [
+        "jakasRola", "hardkorzy", "admin", "sprzatacze"
+      ]
+    },
+    {
+      "entityName": "JeszczeInnaKlasa",
+      "allowedRoles": [
+        "innaRola", "szaracy", "admin", "kolejnaRola"
+      ]
+    },
+    {
+      "entityName": "JeszczeInnaKlasa",
+      "allowedRoles": [
+        "szaracy", "admin", "kolejnaRola"
+      ]
+    }
+  ]
+}
