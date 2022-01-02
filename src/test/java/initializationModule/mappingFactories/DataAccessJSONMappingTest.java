@@ -52,6 +52,7 @@ public class DataAccessJSONMappingTest {
         @Test
         public void throwsExceptionIfJSONDoesNotContainDistinctIDs() {
             assertThrows(Exception.class, () -> this.dataAccessJSONMapping.read(this.JSONPathWithDoubledID));
+            assertDoesNotThrow(() -> this.dataAccessJSONMapping.read(this.JSONPath));
         }
     }
 
