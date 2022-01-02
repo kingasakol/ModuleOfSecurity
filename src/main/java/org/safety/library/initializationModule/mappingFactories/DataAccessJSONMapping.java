@@ -1,7 +1,7 @@
 package org.safety.library.initializationModule.mappingFactories;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.safety.library.initializationModule.JSONMapping;
 import org.safety.library.initializationModule.JSONMappingFactory;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class DataAccessJSONMapping implements JSONMappingFactory {
     @Override
-    public JSONMapping read(String path) {
+    public JSONMapping read(String path) throws Exception {
         JSONParser jsonParser = new JSONParser();
         try(FileReader reader = new FileReader(path)){
             List<List<String>> result = new LinkedList<>();
@@ -35,7 +35,7 @@ public class DataAccessJSONMapping implements JSONMappingFactory {
             //Next rows in the result will be saved in the list with schema [id, allowed_role_1, allowed_role_2, allowed_role_3, ...]
             protectedDataList.forEach(protectedRow -> result.add(parseOneRow((JSONObject) protectedRow)));
 
-            return () -> result;
+            return testIfRowsContainsDistinctIDs(() -> result);
         }
         catch (FileNotFoundException e){
             System.out.println("JSON file was not found");
@@ -52,6 +52,17 @@ public class DataAccessJSONMapping implements JSONMappingFactory {
 
 
         return null;
+    }
+
+    private JSONMapping testIfRowsContainsDistinctIDs(JSONMapping jsonMapping) throws Exception{
+        String[] ids = jsonMapping.getMappedData().stream().map(row -> row.get(0)).toArray(String[]::new);
+        Arrays.sort(ids);
+        for(int i = 0; i < ids.length - 1; i++){
+            if(ids[i].equals(ids[i+1])){
+                throw new Exception("JSON does not have distinct ids. It is neccessary to provice distinct ids with allowed roles.");
+            }
+        }
+        return jsonMapping;
     }
 
     private List<String> parseOneRow(JSONObject row){

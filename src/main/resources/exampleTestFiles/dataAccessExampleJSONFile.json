@@ -1,0 +1,23 @@
+{
+  "name": "SomeProtectedEntity",
+  "data": [
+    {
+      "id": "1",
+      "allowedRoles": [
+        "admin", "ksiegowy", "tester", "hacker"
+      ]
+    },
+    {
+      "id": "2",
+      "allowedRoles": [
+        "admin", "signedOutUser", "prezesi"
+      ]
+    },
+    {
+      "id": "5",
+      "allowedRoles": [
+        "admin", "signedOutUser", "HR"
+      ]
+    }
+  ]
+}
