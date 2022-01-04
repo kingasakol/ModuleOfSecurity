@@ -6,21 +6,16 @@ import java.util.List;
 import java.util.Map;
 
 public class DataAccess {
-    private String classType;
 
     //Integer is an ID of protected record
-    private Map<Role, List<Integer>> accessForEntity;
+    //String is a protected entity name
+    private Map<String, Map<Role, List<Integer>>>  accessForEntity;
 
-    public DataAccess(String classType, Map<Role, List<Integer>> accessForEntity) {
-        this.classType = classType;
+    public DataAccess(Map<String, Map<Role, List<Integer>>> accessForEntity) {
         this.accessForEntity = accessForEntity;
     }
 
-    public String getClassType() {
-        return classType;
-    }
-
-    public Map<Role, List<Integer>> getAccessForEntity() {
+    public Map<String, Map<Role, List<Integer>>> getAccessForEntity() {
         return accessForEntity;
     }
 }
