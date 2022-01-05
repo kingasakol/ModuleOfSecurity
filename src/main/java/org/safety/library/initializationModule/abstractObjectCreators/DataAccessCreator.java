@@ -18,10 +18,11 @@ public class DataAccessCreator {
     }
 
     public DataAccess createDataAccess(JSONMappingFactory factory){
-        Map<String, Map<Role, List<Integer>>> result = new HashMap<>();
-        List<List<String>> readData = null;
+        Map<Role, List<Integer>> result = new HashMap<>();
+        String className;
+        Map<String, Role> rolesMap = getRolesByItsNames();
         try{
-            factory.read(jsonPath).getMappedData().forEach(innerList -> {
+            factory.read(jsonPath).getMappedData().forEach((innerList) -> {
 
             });
 
@@ -36,7 +37,10 @@ public class DataAccessCreator {
     private Map<String, Role> getRolesByItsNames(){
         Session session = SessionProvider.getSession();
         Map<String, Role> result = new HashMap<>();
-        session.createQuery("FROM Role R");
+        List<Role> queriedRoles = session.createQuery("FROM Role R").list();
+        queriedRoles.forEach(role -> {
+            result.put(role.getName(), role);
+        });
         return result;
     }
 
