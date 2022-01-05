@@ -7,6 +7,7 @@ import org.safety.library.initializationModule.abstractMappingObjects.DataAccess
 import org.safety.library.models.Role;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,10 +23,19 @@ public class DataAccessCreator {
         String className;
         Map<String, Role> rolesMap = getRolesByItsNames();
         try{
-            factory.read(jsonPath).getMappedData().forEach((innerList) -> {
-
-            });
-
+            List<List<String>> factoryResult = factory.read(jsonPath).getMappedData();
+            className = factoryResult.get(0).get(0);
+            for(int index = 1; index < factoryResult.size(); index++){
+                int id = Integer.parseInt(factoryResult.get(index).get(0));
+                for(int innerIndex = 1; innerIndex < factoryResult.get(index).size(); innerIndex++){
+                    String roleName = factoryResult.get(index).get(innerIndex);
+                    if(result.get(rolesMap.get(roleName)) == null){
+                        result.put(rolesMap.get(rolesMap), new LinkedList<>());
+                    }
+                    result.get(rolesMap.get(roleName)).add(id);
+                }
+            }
+            return new DataAccess(className, result);
         }
         catch (Exception e) {
             e.printStackTrace();
