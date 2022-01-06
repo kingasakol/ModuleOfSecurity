@@ -1,6 +1,8 @@
 package initializationModule.abstractObjectCreators;
 
 import helpers.DataAccessCreatorTestStubs;
+import helpers.DatabaseWrapperStubs;
+import helpers.JSONMappingStubs;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,15 +19,15 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class DataAccessCreatorTest {
-    Map<String, Role> stubbedRoles = DataAccessCreatorTestStubs.stubbedRoles;
+    Map<String, Role> stubbedRoles = DatabaseWrapperStubs.stubbedRoles;
 
     @Test
     public void createsValidDataAccessFromFactory() throws Exception{
         //given
 
-        DataAccessCreator creator = new DataAccessCreator(DataAccessCreatorTestStubs.getDatabaseWrappersMock());
+        DataAccessCreator creator = new DataAccessCreator(DatabaseWrapperStubs.getDatabaseWrappersMock());
 
-        JSONMapping mapping = DataAccessCreatorTestStubs.getJSONMappingMock();
+        JSONMapping mapping = JSONMappingStubs.getJSONMappingMock(DataAccessCreatorTestStubs.stubbedFactoryResults);
 
         //when
         DataAccess result = creator.createDataAccess(mapping);
