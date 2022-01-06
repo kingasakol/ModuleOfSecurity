@@ -14,7 +14,7 @@ public class AccessListRow {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    private long protectedDataId;
+    private int protectedDataId;
 
     private String tableName;
 
@@ -25,7 +25,7 @@ public class AccessListRow {
     private boolean canUpdate;
 
 
-    public AccessListRow(Role role, long protectedDataId, String tableName, boolean canRead, boolean canDelete, boolean canUpdate) {
+    public AccessListRow(Role role, int protectedDataId, String tableName, boolean canRead, boolean canDelete, boolean canUpdate) {
         this.role = role;
         this.protectedDataId = protectedDataId;
         this.tableName = tableName;
@@ -48,7 +48,7 @@ public class AccessListRow {
         return protectedDataId;
     }
 
-    public void setProtectedDataId(long protectedDataId) {
+    public void setProtectedDataId(int protectedDataId) {
         this.protectedDataId = protectedDataId;
     }
 

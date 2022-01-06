@@ -39,6 +39,10 @@ public class Permission {
         return canUpdate;
     }
 
+    public boolean isCanDelete() {
+        return canDelete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
