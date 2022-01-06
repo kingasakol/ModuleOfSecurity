@@ -24,9 +24,7 @@ public class EntityAccessCreatorTest {
         JSONMapping mapping = JSONMappingStubs.getJSONMappingMock(EntityAccessCreatorStubs.stubbedFactoryResults);
 
         EntityAccess result = creator.createEntityAccess(mapping);
-        result.getAddPriviledges().forEach((v,k) -> {
-            System.out.println(v.getName());
-        });
+
         assertArrayEquals(result.getAddPriviledges().get(stubbedRoles.get("admin")).toArray(), new LinkedList<>(Arrays.asList(
                 "Klasa1", "Klasa2", "Klasa3", "InnaKlasa", "KolejnaKlasa"
         )).toArray());
