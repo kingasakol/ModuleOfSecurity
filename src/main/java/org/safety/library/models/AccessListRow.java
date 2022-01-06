@@ -34,6 +34,8 @@ public class AccessListRow {
         this.canUpdate = canUpdate;
     }
 
+    public AccessListRow() {}
+
     public Role getRole() {
         return role;
     }

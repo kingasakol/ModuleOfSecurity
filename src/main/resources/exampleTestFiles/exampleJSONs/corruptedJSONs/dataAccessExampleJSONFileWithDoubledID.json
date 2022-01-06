@@ -4,25 +4,99 @@
     {
       "id": "1",
       "allowedRoles": [
-        "admin", "ksiegowy", "tester", "hacker"
+        {
+          "name": "admin",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        },
+        {
+          "name": "ksiegowy",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        },
+        {
+          "name": "tester",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        {
+          "name": "hacker",
+          "canRead": false,
+          "canUpdate": false,
+          "canDelete": false
+        }
       ]
     },
     {
       "id": "2",
       "allowedRoles": [
-        "admin", "signedOutUser", "prezesi"
-      ]
-    },
-    {
-      "id": "2",
-      "allowedRoles": [
-        "admin", "poczatkujacy", "koty"
+        {
+          "name": "admin",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        {
+          "name": "signedOutUser",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": true
+        },
+        {
+          "name": "prezesi",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": true
+        }
       ]
     },
     {
       "id": "5",
       "allowedRoles": [
-        "admin", "signedOutUser", "HR"
+        {
+          "name": "admin",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        {
+          "name": "signedOutUser",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        },
+        {
+          "name": "HR",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "allowedRoles": [
+        {
+          "name": "admin",
+          "canRead": true,
+          "canUpdate": true,
+          "canDelete": false
+        },
+        {
+          "name": "signedOutUser",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        },
+        {
+          "name": "HR",
+          "canRead": true,
+          "canUpdate": false,
+          "canDelete": false
+        }
       ]
     }
   ]

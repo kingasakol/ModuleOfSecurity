@@ -39,13 +39,13 @@ public class DataAccessJSONMappingTest {
 
             assertArrayEquals(result.getMappedData().get(0).toArray(), new LinkedList<>(Arrays.asList("SomeProtectedEntity")).toArray());
             assertArrayEquals(result.getMappedData().get(1).toArray(), new LinkedList<>(
-                    Arrays.asList("1", "admin", "ksiegowy", "tester", "hacker")).toArray()
+                    Arrays.asList("1", "admin","true","true","true", "ksiegowy", "true", "false", "false", "tester","true","true", "false", "hacker", "false", "false", "false")).toArray()
             );
             assertArrayEquals(result.getMappedData().get(2).toArray(), new LinkedList<>(
-                    Arrays.asList("2", "admin", "signedOutUser", "prezesi")).toArray()
+                    Arrays.asList("2", "admin","true","true","false", "signedOutUser","true","false","true", "prezesi","true","true","true")).toArray()
             );
             assertArrayEquals(result.getMappedData().get(3).toArray(), new LinkedList<>(
-                    Arrays.asList("5", "admin", "signedOutUser", "HR")).toArray()
+                    Arrays.asList("5", "admin","true","true","false", "signedOutUser", "true", "false", "false", "HR","true", "false", "false")).toArray()
             );
         }
 

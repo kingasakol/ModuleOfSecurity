@@ -69,7 +69,13 @@ public class DataAccessJSONMapping implements JSONMappingFactory {
         List<String> parsedRow = new LinkedList<>();
         parsedRow.add((String) row.get("id"));
         JSONArray allowedRoles = (JSONArray) row.get("allowedRoles");
-        allowedRoles.forEach(role -> parsedRow.add((String)role));
+        allowedRoles.forEach(role -> {
+            JSONObject roleObject = (JSONObject) role;
+            parsedRow.add((String)roleObject.get("name"));
+            parsedRow.add(roleObject.get("canRead").toString());
+            parsedRow.add(roleObject.get("canUpdate").toString());
+            parsedRow.add(roleObject.get("canDelete").toString());
+        });
         return parsedRow;
     }
 }
