@@ -21,7 +21,7 @@ public class RolesForUsersJSONMappingTest {
 
         @BeforeEach
         public void init() throws URISyntaxException {
-            this.JSONPath = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/dataExampleRolesForUsersJSONFile.json").toURI()).toString();
+            this.JSONPath = Paths.get(ClassLoader.getSystemResource("exampleTestFiles/exampleJSONs/corruptedJSONs/dataExampleRolesForUsersJSONFile.json").toURI()).toString();
         }
 
         @Test
