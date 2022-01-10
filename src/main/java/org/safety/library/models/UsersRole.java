@@ -8,11 +8,14 @@ public class UsersRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
+    @Column(name="id", nullable = false)
+    private int id;
+
+    @Column(name = "user_id", nullable = false)
     private int userId;
 
     @OneToOne //???
-    @JoinColumn(name="role_id")
+    @JoinColumn(name="role_id", nullable = false)
     private Role role;
 
     private String tableName;
