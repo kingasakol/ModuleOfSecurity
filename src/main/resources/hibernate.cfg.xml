@@ -15,5 +15,7 @@
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
     <mapping class="org.safety.library.models.TestModel"></mapping>
+    <mapping class="org.safety.library.models.Role"></mapping>
+    <mapping class="org.safety.library.models.AccessListRow"></mapping>
   </session-factory>
 </hibernate-configuration>

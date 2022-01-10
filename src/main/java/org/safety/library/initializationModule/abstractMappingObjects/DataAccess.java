@@ -1,5 +1,6 @@
 package org.safety.library.initializationModule.abstractMappingObjects;
 
+import org.safety.library.initializationModule.utils.Permission;
 import org.safety.library.models.Role;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public class DataAccess {
     private String classType;
 
     //Integer is an ID of protected record
-    private Map<Role, List<Integer>> accessForEntity;
+    private Map<Role, List<Permission>> accessForEntity;
 
-    public DataAccess(String classType, Map<Role, List<Integer>> accessForEntity) {
+    public DataAccess(String classType, Map<Role, List<Permission>> accessForEntity) {
         this.classType = classType;
         this.accessForEntity = accessForEntity;
     }
@@ -20,7 +21,7 @@ public class DataAccess {
         return classType;
     }
 
-    public Map<Role, List<Integer>> getAccessForEntity() {
+    public Map<Role, List<Permission>> getAccessForEntity() {
         return accessForEntity;
     }
 }
