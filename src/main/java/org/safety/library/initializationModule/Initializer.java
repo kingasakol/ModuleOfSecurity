@@ -16,15 +16,21 @@ public class Initializer {
     private List<JSONMappingUser> configurationCreators;
     private ClassFinder classFinder;
 
+    public Initializer(){
+        classFinder = new ClassFinder();
+    }
+
     private String getRolesPathFromAnnotation() throws Exception {
-        List<Class> allClasses = classFinder.getAllClasses(".");
+        List<Class> allClasses = classFinder.getAllClasses();
         List<Annotation> usersAnnotations = new LinkedList<>();
-        allClasses.forEach(clazz -> Arrays.stream(clazz.getAnnotations()).toList().forEach(annotation -> {
-            if(annotation.getClass().equals(Users.class)){
-                usersAnnotations.add(annotation);
-            }
-        }));
-        if(usersAnnotations.size() != 0){
+        allClasses.forEach(clazz -> {
+           Arrays.stream(clazz.getAnnotations()).toList().forEach(annotation -> {
+               if(annotation instanceof Users){
+                   usersAnnotations.add(annotation);
+               }
+           });
+        });
+        if(usersAnnotations.size() != 1){
             throw new Exception("Exactly one class should be annotated by @Users annotation");
         }
         return ((Users)usersAnnotations.get(0)).jsonPath();
@@ -42,7 +48,6 @@ public class Initializer {
 
     public void initialize() throws Exception {
         rolesCreator = initializeRolesCreator();
-        classFinder = new ClassFinder();
         configurationCreators = initializeConfigurationCreators();
         //TODO
     }
