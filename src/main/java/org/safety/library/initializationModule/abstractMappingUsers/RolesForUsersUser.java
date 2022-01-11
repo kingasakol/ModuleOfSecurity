@@ -11,23 +11,22 @@ import java.util.List;
 
 
 public class RolesForUsersUser implements JSONMappingUser {
-    private List<RolesForUsers> rolesForUsers;
+    private RolesForUsers rolesForUsers;
 
-    public RolesForUsersUser(List<RolesForUsers> rolesForUsers) {
+    public RolesForUsersUser(RolesForUsers rolesForUsers) {
         this.rolesForUsers = rolesForUsers;
     }
 
     @Override
     public void use() {
-        this.rolesForUsers.forEach(rolesForUsers -> {
-            rolesForUsers.getUsersRoles().forEach((id, role) -> {
-                Session session = SessionProvider.getSession();
-                Transaction tx = session.beginTransaction();
-                UsersRole usersRole = new UsersRole(id, role);
-                session.save(usersRole);
-                tx.commit();
-                session.close();
-            });
+        rolesForUsers.getUsersRoles().forEach((id, role) -> {
+            Session session = SessionProvider.getSession();
+            Transaction tx = session.beginTransaction();
+            UsersRole usersRole = new UsersRole(id, role);
+            session.save(usersRole);
+            tx.commit();
+            session.close();
         });
+
     }
 }
