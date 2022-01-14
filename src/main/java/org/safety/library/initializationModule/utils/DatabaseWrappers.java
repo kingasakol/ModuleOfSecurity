@@ -28,6 +28,7 @@ public class DatabaseWrappers {
         if(roles.size() != 1){
             throw new RoleForUserNotFoundException("There is no Role associated with this userId in a database");
         }
+        session.close();
         return roles.get(0);
     }
 }
