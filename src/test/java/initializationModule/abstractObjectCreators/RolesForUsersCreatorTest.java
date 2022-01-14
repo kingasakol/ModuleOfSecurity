@@ -6,6 +6,7 @@ import helpers.RolesForUsersCreatorStubs;
 import org.junit.jupiter.api.Test;
 import org.safety.library.initializationModule.JSONMapping;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesForUsers;
+import org.safety.library.initializationModule.abstractMappingUsers.RolesForUsersUser;
 import org.safety.library.initializationModule.abstractObjectCreators.RolesForUsersCreator;
 import org.safety.library.models.Role;
 
@@ -28,7 +29,6 @@ public class RolesForUsersCreatorTest {
         //then
         Role role = result.getUsersRoles().get(1);
         System.out.println(role);
-        assertTrue(result.getUsersRoles().get(1).equals(new Role("admin")));
         assertTrue(result.getUsersRoles().get(1).equals(new Role("admin")));
         assertTrue(result.getUsersRoles().get(2).equals(new Role("ksiegowy")));
         assertTrue(result.getUsersRoles().get(3).equals(new Role("tester")));

@@ -1,0 +1,23 @@
+{
+  "name": "RolesList",
+  "data": [
+    {
+      "role": "admin"
+    },
+    {
+      "role": "andrzej"
+    },
+    {
+      "role": "ksiegowy"
+    },
+    {
+      "role": "tester"
+    },
+    {
+      "role": "andrzej"
+    },
+    {
+      "role": "hacker"
+    }
+  ]
+}
