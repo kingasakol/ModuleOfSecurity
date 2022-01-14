@@ -59,7 +59,7 @@ public class Initializer {
         List<Annotation> protectedDataAnnotations = new LinkedList<>();
         allClasses.forEach(clazz -> {
             Arrays.stream(clazz.getAnnotations()).toList().forEach(annotation -> {
-                if(annotation instanceof Users){
+                if(annotation instanceof ProtectedData){
                     protectedDataAnnotations.add(annotation);
                 }
             });
