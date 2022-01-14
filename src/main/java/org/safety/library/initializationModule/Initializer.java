@@ -2,6 +2,7 @@ package org.safety.library.initializationModule;
 
 import org.safety.library.annotations.ProtectedData;
 import org.safety.library.annotations.Users;
+import org.safety.library.initializationModule.Exceptions.ClassWithAnnotationDidntFound;
 import org.safety.library.initializationModule.abstractMappingUsers.DataAccessUser;
 import org.safety.library.initializationModule.abstractMappingUsers.EntityAccessUser;
 import org.safety.library.initializationModule.abstractMappingUsers.RolesForUsersUser;
@@ -46,7 +47,9 @@ public class Initializer {
            });
         });
         if(usersAnnotations.size() != 1){
-            throw new Exception("Exactly one class should be annotated by @Users annotation");
+            throw new ClassWithAnnotationDidntFound("Didn't found any class annotated by Annotation @Users. To use safety library" +
+                    " you must annotate Hibernate entity, that represents Users entity with annotation" +
+                    " @Users.");
         }
         return ((Users)usersAnnotations.get(0)).jsonPath();
     }
