@@ -23,19 +23,29 @@ public class RolesListCreatorTest {
         @BeforeEach
         public void init() throws URISyntaxException {
             JSONPath = Paths.get(ClassLoader.getSystemResource(
-                    "exampleTestFiles/exampleJSONs/validJSONs/rolesListJSONFile.json").toURI()).toString();
+                    "exampleTestFiles/exampleJSONs/validJSONs/rolesListWithPrivilagesJSONFile.json").toURI()).toString();
         }
 
         @Test
         public void rolesListCreatorTest() throws Exception {
             JSONMapping jsonMapping = rolesListJSONMapping.read(JSONPath);
             RolesList rolesList = rolesListCreator.createRolesList(jsonMapping);
+            //System.out.println(rolesList.getRoles());
+            assertEquals(rolesList.getRoles().size(), 3);
+            assertEquals(rolesList.getRoles().get(0).get(0), "admin");
+            assertEquals(rolesList.getRoles().get(1).get(0), "ksiegowy");
+            assertEquals(rolesList.getRoles().get(2).get(0), "robol");
 
-            assertEquals(rolesList.getRoles().size(), 4);
-            assertEquals(rolesList.getRoles().get(0).getName(), "admin");
-            assertEquals(rolesList.getRoles().get(1).getName(), "ksiegowy");
-            assertEquals(rolesList.getRoles().get(2).getName(), "tester");
-            assertEquals(rolesList.getRoles().get(3).getName(), "hacker");
+            assertEquals(rolesList.getRoles().get(0).get(1),"Klasa");
+            assertEquals(rolesList.getRoles().get(0).get(2),"true");
+            assertEquals(rolesList.getRoles().get(0).get(3),"true");
+            assertEquals(rolesList.getRoles().get(0).get(4),"true");
+
+            assertEquals(rolesList.getRoles().get(0).get(5),"InnaKlasa");
+            assertEquals(rolesList.getRoles().get(0).get(6),"true");
+            assertEquals(rolesList.getRoles().get(0).get(7),"true");
+            assertEquals(rolesList.getRoles().get(0).get(8),"true");
+
 
 //            Don't know if that below should work bc there is issue with database
 //            RolesListUser rolesListUser = new RolesListUser(rolesList);

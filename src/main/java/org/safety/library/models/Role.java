@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,6 +12,10 @@ public class Role {
     private Long id;
 
     private String name;
+
+
+    @OneToMany
+    private List<DefaultPrivilige> defaultPriviliges;
 
     public Role() {}
 

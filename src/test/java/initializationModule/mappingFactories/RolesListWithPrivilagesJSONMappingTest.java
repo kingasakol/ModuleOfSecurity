@@ -12,9 +12,7 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-
-public class    RolesListJSONMappingTest {
-
+public class RolesListWithPrivilagesJSONMappingTest {
     @Nested
     class JSONReadingTest {
         private String JSONPath;
@@ -31,13 +29,18 @@ public class    RolesListJSONMappingTest {
             JSONMapping jsonMapping = rolesListJSONMapping.read(JSONPath);
 
             assertEquals(jsonMapping.getMappedData().size(), 4);
-            System.out.println(jsonMapping.getMappedData());
+
             assertEquals(jsonMapping.getMappedData().get(0).get(0), "RolesList");
             assertEquals(jsonMapping.getMappedData().get(1).get(0), "admin");
             assertEquals(jsonMapping.getMappedData().get(2).get(0), "ksiegowy");
             assertEquals(jsonMapping.getMappedData().get(3).get(0), "robol");
 
-            assertEquals(jsonMapping.getMappedData().get(1).get(1), "Klasa");
+
+            assertEquals(jsonMapping.getMappedData().get(3).get(1), "Klasa");
+            assertEquals(jsonMapping.getMappedData().get(3).get(2), "true");
+            assertEquals(jsonMapping.getMappedData().get(3).get(3), "false");
+            assertEquals(jsonMapping.getMappedData().get(3).get(4), "false");
+
         }
 
         @Test

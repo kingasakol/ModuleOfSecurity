@@ -7,6 +7,8 @@ import org.safety.library.initializationModule.JSONMappingUser;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesList;
 import org.safety.library.models.Role;
 
+import java.util.List;
+
 
 public class RolesListUser implements JSONMappingUser {
     private final RolesList rolesList;
@@ -17,7 +19,7 @@ public class RolesListUser implements JSONMappingUser {
 
     @Override
     public void use() {
-        for (Role role : this.rolesList.getRoles()) {
+        for (List<String> role : this.rolesList.getRoles()) {
             Session session = SessionProvider.getSession();
             Transaction tx = session.beginTransaction();
             session.save(role);

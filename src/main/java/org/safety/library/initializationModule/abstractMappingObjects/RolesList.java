@@ -5,13 +5,13 @@ import org.safety.library.models.Role;
 import java.util.List;
 
 public class RolesList {
-    private List<Role> roles;
+    private List<List<String>> roles;
 
-    public RolesList(List<Role> roles) {
+    public RolesList(List<List<String>> roles) {
         this.roles = roles;
     }
 
-    public List<Role> getRoles() {
+    public List<List<String>> getRoles() {
         return roles;
     }
 }
