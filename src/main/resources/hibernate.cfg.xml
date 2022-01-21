@@ -17,5 +17,6 @@
     <mapping class="org.safety.library.models.TestModel"></mapping>
     <mapping class="org.safety.library.models.Role"></mapping>
     <mapping class="org.safety.library.models.AccessListRow"></mapping>
+    <mapping class="org.safety.library.models.HibernateSelect"></mapping>
   </session-factory>
 </hibernate-configuration>
