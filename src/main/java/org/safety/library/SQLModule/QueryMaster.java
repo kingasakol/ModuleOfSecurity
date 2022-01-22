@@ -3,10 +3,13 @@ package org.safety.library.SQLModule;
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 
 public class QueryMaster {
+    private String sql;
 
-    // Here is need original sql query
-    public String buildQuery(RolesPrivilegesMap rolesPrivilegesMap, Builder builder){
-        //TODO
-        return null;
+    public QueryMaster(String sql){
+        this.sql = sql;
+    }
+
+    public String buildQuery(RolesPrivilegesMap rolesPrivilegesMap, Builder builder) throws Exception {
+        return builder.returnPreparedSQL(rolesPrivilegesMap.getPrivileges(), this.sql);
     }
 }
