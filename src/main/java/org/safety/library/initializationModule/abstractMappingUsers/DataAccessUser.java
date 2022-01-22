@@ -23,16 +23,21 @@ public class DataAccessUser implements JSONMappingUser {
         Session session = SessionProvider.getSession();
         Transaction tx = session.beginTransaction();
         this.dataAccesses.forEach(dataAccess -> {
-            dataAccess.getAccessForEntity().forEach(((role, permissions) -> {
-                permissions.forEach(permission -> {
-                    AccessListRow accessListRow = new AccessListRow(role, permission.getDataId(), dataAccess.getClassType(), permission.isCanRead(), permission.isCanUpdate(), permission.isCanDelete());
-                    session.save(accessListRow);
-                });
-            }));
-            HibernateSelect hibernateSelect = new HibernateSelect(dataAccess.getClassType().toLowerCase(Locale.ROOT)+"0_", dataAccess.getClassType());
-            session.save(hibernateSelect);
+            if(dataAccess != null){
+                dataAccess.getAccessForEntity().forEach(((role, permissions) -> {
+                    permissions.forEach(permission -> {
+                        AccessListRow accessListRow = new AccessListRow(role, permission.getDataId(), dataAccess.getClassType(), permission.isCanRead(), permission.isCanUpdate(), permission.isCanDelete());
+                        session.save(accessListRow);
+                    });
+                }));
+                String type = dataAccess.getClassType();
+                if(type.length() > 10){
+                    type = type.substring(0, 10);
+                }
+                HibernateSelect hibernateSelect = new HibernateSelect(type.toLowerCase(Locale.ROOT)+"0_", dataAccess.getClassType());
+                session.save(hibernateSelect);
+            }
         });
         tx.commit();
-        session.close();
     }
 }

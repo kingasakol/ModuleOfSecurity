@@ -14,11 +14,10 @@ public class DatabaseWrappers {
     public Map<String, Role> getRolesByItsNames(){
         Session session = SessionProvider.getSession();
         Map<String, Role> result = new HashMap<>();
-        List<Role> queriedRoles = session.createQuery("FROM Role R").list();
+        List<Role> queriedRoles = session.createQuery("FROM Role R").getResultList();
         queriedRoles.forEach(role -> {
             result.put(role.getName(), role);
         });
-        session.close();
         return result;
     }
 
@@ -28,7 +27,6 @@ public class DatabaseWrappers {
         if(roles.size() != 1){
             throw new RoleForUserNotFoundException("There is no Role associated with this userId in a database");
         }
-        session.close();
         return roles.get(0);
     }
 }

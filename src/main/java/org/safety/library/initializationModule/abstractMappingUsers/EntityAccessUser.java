@@ -25,7 +25,6 @@ public class EntityAccessUser implements JSONMappingUser {
                 AddPrivilege addPrivilege = new AddPrivilege(role, tableName);
                 session.save(addPrivilege);
                 tx.commit();
-                session.close();
             });
         }));
     }

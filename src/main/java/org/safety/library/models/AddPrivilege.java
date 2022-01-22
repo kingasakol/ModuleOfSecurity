@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "add_privilege")
@@ -44,5 +45,18 @@ public class AddPrivilege {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AddPrivilege that = (AddPrivilege) o;
+        return role.equals(that.role) && tableName.equals(that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(role, tableName);
     }
 }

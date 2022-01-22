@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class HibernateSelect {
@@ -38,4 +39,17 @@ public class HibernateSelect {
     }
 
     public HibernateSelect() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HibernateSelect that = (HibernateSelect) o;
+        return hibernateSelectName.equals(that.hibernateSelectName) && entityName.equals(that.entityName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(hibernateSelectName, entityName);
+    }
 }

@@ -22,7 +22,6 @@ public class RolesListUser implements JSONMappingUser {
             Transaction tx = session.beginTransaction();
             session.save(role);
             tx.commit();
-            session.close();
         }
     }
 }
