@@ -38,16 +38,12 @@ public class DatabaseWrappers {
         return roles.get(0);
     }
 
-    public AccessListRow getAccessForRole(Role role) throws AccessListRowNotFoundException {
+    public List<AccessListRow> getAccessForRole(Role role) throws AccessListRowNotFoundException {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
         List<AccessListRow> accessListRow = session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
-
-        if(accessListRow.size() != 1) {
-            throw new AccessListRowNotFoundException("There is no AccessListRow associated with this roleId in a database");
-        }
         session.close();
-        return accessListRow.get(0);
+        return accessListRow;
     }
 
     public List<AddPrivilege> getAddPrivillege(Role role) throws AddPrivillegeRowNotFoundException {

@@ -16,7 +16,7 @@ public class RolesPrivilegesMap {
     private PriviledgesReader priviledgesReader;
     private String tableName = null;
 
-    private AccessListRow privileges;
+    private List<AccessListRow> privileges;
     private boolean canCreate;
 
     private Role concreteRole = null;
@@ -75,7 +75,7 @@ public class RolesPrivilegesMap {
 
 
 
-    public AccessListRow getPrivileges(){
+    public List<AccessListRow> getPrivileges(){
         return this.privileges;
     }
 
@@ -83,7 +83,7 @@ public class RolesPrivilegesMap {
         return this.canCreate;
     }
 
-    public void setPrivileges(AccessListRow privileges) {
+    public void setPrivileges(List<AccessListRow> privileges) {
         this.privileges = privileges;
     }
 }
