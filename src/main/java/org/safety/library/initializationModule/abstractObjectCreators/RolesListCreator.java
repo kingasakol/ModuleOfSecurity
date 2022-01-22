@@ -29,6 +29,7 @@ public class RolesListCreator {
             }
             newRole.setDefaultPriviliges(privList);
             result.add(newRole);
+            System.out.println(newRole.getDefaultPriviliges());
         }
         return new RolesList(result);
     }

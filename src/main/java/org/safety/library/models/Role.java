@@ -14,7 +14,7 @@ public class Role {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<DefaultPrivilige> privs;
 
     public Role() {}

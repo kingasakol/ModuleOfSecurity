@@ -63,6 +63,11 @@ public class InitializationModuleIntegrationTests {
         List<Role> roles = session.createQuery("FROM Role ").getResultList();
         List<UsersRole> usersRoles = session.createQuery("FROM UsersRole ").getResultList();
         List<HibernateSelect> hibernateSelects = session.createQuery("FROM HibernateSelect ").getResultList();
+        List<DefaultPrivilige> adminDefs = roles.get(0).getDefaultPriviliges();
+        List<DefaultPrivilige> ksiegowyDefs = roles.get(1).getDefaultPriviliges();
+        List<DefaultPrivilige> testerDefs = roles.get(2).getDefaultPriviliges();
+        List<DefaultPrivilige> hackerDefs = roles.get(3).getDefaultPriviliges();
+
 
         assertEquals(accessListRows.size(), 16);
         assertEquals(accessListRows.get(0), new AccessListRow(new Role("hacker"), 1, "SomeProtectedClass1", false, false, false));
@@ -93,6 +98,45 @@ public class InitializationModuleIntegrationTests {
         assertEquals(hibernateSelects.size(), 2);
         assertEquals(hibernateSelects.get(0), new HibernateSelect("someprotec0_", "SomeProtectedClass1"));
         assertEquals(hibernateSelects.get(1), new HibernateSelect("someprotec0_", "SomeProtectedClass2"));
+        // asserting that Roles have been mapped well
+        assertEquals(adminDefs.get(0).getTableName(), "SomeProtectedClass1");
+        assertEquals(adminDefs.get(0).isCanUpdate(), true);
+        assertEquals(adminDefs.get(0).isCanRead(), true);
+        assertEquals(adminDefs.get(0).isCanDelete(), true);
 
+        assertEquals(adminDefs.get(1).getTableName(), "SomeProtectedClass2");
+        assertEquals(adminDefs.get(1).isCanUpdate(), true);
+        assertEquals(adminDefs.get(1).isCanRead(), true);
+        assertEquals(adminDefs.get(1).isCanDelete(), true);
+
+        assertEquals(ksiegowyDefs.get(0).getTableName(), "SomeProtectedClass1");
+        assertEquals(ksiegowyDefs.get(0).isCanUpdate(), false);
+        assertEquals(ksiegowyDefs.get(0).isCanRead(), true);
+        assertEquals(ksiegowyDefs.get(0).isCanDelete(), false);
+
+        assertEquals(ksiegowyDefs.get(1).getTableName(), "SomeProtectedClass2");
+        assertEquals(ksiegowyDefs.get(1).isCanUpdate(), false);
+        assertEquals(ksiegowyDefs.get(1).isCanRead(), true);
+        assertEquals(ksiegowyDefs.get(1).isCanDelete(), false);
+
+        assertEquals(hackerDefs.get(0).getTableName(), "SomeProtectedClass1");
+        assertEquals(hackerDefs.get(0).isCanUpdate(), false);
+        assertEquals(hackerDefs.get(0).isCanRead(), false);
+        assertEquals(hackerDefs.get(0).isCanDelete(), false);
+
+        assertEquals(hackerDefs.get(1).getTableName(), "SomeProtectedClass2");
+        assertEquals(hackerDefs.get(1).isCanUpdate(), false);
+        assertEquals(hackerDefs.get(1).isCanRead(), false);
+        assertEquals(hackerDefs.get(1).isCanDelete(), false);
+
+        assertEquals(testerDefs.get(0).getTableName(), "SomeProtectedClass1");
+        assertEquals(testerDefs.get(0).isCanUpdate(), true);
+        assertEquals(testerDefs.get(0).isCanRead(), true);
+        assertEquals(testerDefs.get(0).isCanDelete(), false);
+
+        assertEquals(testerDefs.get(1).getTableName(), "SomeProtectedClass2");
+        assertEquals(testerDefs.get(1).isCanUpdate(), true);
+        assertEquals(testerDefs.get(1).isCanRead(), true);
+        assertEquals(testerDefs.get(1).isCanDelete(), false);
     }
 }
