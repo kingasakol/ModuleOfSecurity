@@ -1,6 +1,5 @@
 package org.safety.library.RolesPrivilegesMap;
 
-import org.safety.library.initializationModule.Exceptions.AccessListRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.AddPrivillegeRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;

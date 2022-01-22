@@ -2,14 +2,12 @@ package org.safety.library.initializationModule.utils;
 
 import org.hibernate.Session;
 import org.safety.library.hibernate.SessionProvider;
-import org.safety.library.initializationModule.Exceptions.AccessListRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.AddPrivillegeRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException;
 import org.safety.library.models.AccessListRow;
 import org.safety.library.models.AddPrivilege;
 import org.safety.library.models.Role;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
