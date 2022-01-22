@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface ProtectedData {
-    public String jsonPath() default "";
+    public String jsonPath();
 
     //the user should define the name of the ID column if it differs from standard name
     public String idColumn() default "id";

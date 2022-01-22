@@ -1,6 +1,8 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -11,6 +13,9 @@ public class Role {
     private Long id;
 
     private String name;
+
+    @OneToMany(cascade = {CascadeType.ALL})
+    private List<DefaultPrivilige> privs;
 
     public Role() {}
 
@@ -28,6 +33,14 @@ public class Role {
 
     public String getName() {
         return name;
+    }
+
+    public void setDefaultPriviliges(List<DefaultPrivilige> privs){
+        this.privs = privs;
+    }
+
+    public List<DefaultPrivilige> getDefaultPriviliges() {
+        return privs;
     }
 
     @Override

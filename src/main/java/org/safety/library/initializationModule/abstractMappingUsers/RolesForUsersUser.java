@@ -23,7 +23,6 @@ public class RolesForUsersUser implements JSONMappingUser {
             UsersRole usersRole = new UsersRole(id, role);
             session.save(usersRole);
             tx.commit();
-            session.close();
         });
 
     }

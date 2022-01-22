@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name="users_role")
@@ -17,8 +18,6 @@ public class UsersRole {
     @OneToOne //???
     @JoinColumn(name="role_id", nullable = false)
     private Role role;
-
-    private String tableName;
 
     public UsersRole(int userId, Role role) {
         this.userId = userId;
@@ -37,11 +36,16 @@ public class UsersRole {
         return role;
     }
 
-    public String getTableName() {
-        return tableName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UsersRole usersRole = (UsersRole) o;
+        return userId == usersRole.userId && role.equals(usersRole.role);
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, role);
     }
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class ClassFinderHelper {
     public static Set<String> currentClassNames = new HashSet<>(Arrays.asList(
-            "initializationModule.utils.ClassFinderTest",
+            "helpers.ClassFinderHelper",
             "helpers.DataAccessCreatorTestStubs",
             "helpers.DatabaseWrapperStubs$1",
             "helpers.DatabaseWrapperStubs",
@@ -19,6 +19,7 @@ public class ClassFinderHelper {
             "initializationModule.abstractObjectCreators.RolesForUsersCreatorTest",
             "initializationModule.abstractObjectCreators.RolesListCreatorTest$JSONReadingTest",
             "initializationModule.abstractObjectCreators.RolesListCreatorTest",
+            "initializationModule.integrationTests.InitializationModuleIntegrationTests",
             "initializationModule.mappingFactories.DataAccessJSONMappingTest$JSONReadingTest",
             "initializationModule.mappingFactories.DataAccessJSONMappingTest",
             "initializationModule.mappingFactories.EntityAccessJSONMappingTest$JSONReadingTest",
@@ -27,6 +28,7 @@ public class ClassFinderHelper {
             "initializationModule.mappingFactories.RolesForUsersJSONMappingTest",
             "initializationModule.mappingFactories.RolesListJSONMappingTest$JSONReadingTest",
             "initializationModule.mappingFactories.RolesListJSONMappingTest",
+            "initializationModule.utils.ClassFinderTest",
             "org.safety.library.annotations.ProtectedData",
             "org.safety.library.annotations.Users",
             "org.safety.library.hibernate.SessionProvider",
@@ -42,6 +44,8 @@ public class ClassFinderHelper {
             "org.safety.library.initializationModule.abstractObjectCreators.EntityAccessCreator",
             "org.safety.library.initializationModule.abstractObjectCreators.RolesForUsersCreator",
             "org.safety.library.initializationModule.abstractObjectCreators.RolesListCreator",
+            "org.safety.library.initializationModule.Exceptions.ClassWithAnnotationDidntFound",
+            "org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException",
             "org.safety.library.initializationModule.Initializer",
             "org.safety.library.initializationModule.JSONMapping",
             "org.safety.library.initializationModule.JSONMappingFactory",
@@ -50,14 +54,28 @@ public class ClassFinderHelper {
             "org.safety.library.initializationModule.mappingFactories.EntityAccessJSONMapping",
             "org.safety.library.initializationModule.mappingFactories.RolesForUsersJSONMapping",
             "org.safety.library.initializationModule.mappingFactories.RolesListJSONMapping",
+            "org.safety.library.initializationModule.testEntities.SomeProtectedClass1",
+            "org.safety.library.initializationModule.testEntities.SomeProtectedClass2",
+            "org.safety.library.initializationModule.testEntities.SomeUnprotectedClass1",
+            "org.safety.library.initializationModule.testEntities.TestUsers",
+            "org.safety.library.initializationModule.utils.Authenticator$AuthenticatorHelper",
+            "org.safety.library.initializationModule.utils.Authenticator",
             "org.safety.library.initializationModule.utils.ClassFinder",
             "org.safety.library.initializationModule.utils.DatabaseWrappers",
             "org.safety.library.initializationModule.utils.Permission",
+            "org.safety.library.initializationModule.utils.PriviledgesReader",
             "org.safety.library.Main",
             "org.safety.library.models.AccessListRow",
             "org.safety.library.models.AddPrivilege",
+            "org.safety.library.models.HibernateSelect",
             "org.safety.library.models.Role",
             "org.safety.library.models.TestModel",
-            "org.safety.library.models.UsersRole"
+            "org.safety.library.models.UsersRole",
+            "org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap",
+            "org.safety.library.SQLModule.Builder",
+            "org.safety.library.SQLModule.DerbyQueryBuilder",
+            "org.safety.library.SQLModule.QueryInterceptor",
+            "org.safety.library.SQLModule.QueryMaster",
+            "org.safety.library.updateModule.UpdateACL"
             ));
 }

@@ -1,0 +1,56 @@
+{
+  "name": "RolesList",
+  "data": [
+    {
+      "role" : "admin",
+      "privilages" : [
+        {
+          "entityName": "Klasa",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "true"
+        },
+        {
+          "entityName": "InnaKlasa",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "true"
+        }
+      ]
+    },
+    {
+      "role" : "ksiegowy",
+      "privilages" : [
+        {
+          "entityName": "Klasa",
+          "canRead": "true",
+          "canUpdate": "false",
+          "canDelete": "false"
+        },
+        {
+          "entityName": "InnaKlasa",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "false"
+        }
+      ]
+    },
+    {
+      "role" : "robol",
+      "privilages" : [
+        {
+          "entityName": "Klasa",
+          "canRead": "true",
+          "canUpdate": "false",
+          "canDelete": "false"
+        },
+        {
+          "entityName": "InnaKlasa",
+          "canRead": "true",
+          "canUpdate": "false",
+          "canDelete": "false"
+        }
+      ]
+    }
+  ]
+}
