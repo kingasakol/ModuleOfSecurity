@@ -11,10 +11,8 @@ public class Main {
     public static void main(String[] args) {
         Session session = SessionProvider.getSession();
         Transaction tx = session.beginTransaction();
-        TestModel testModel = new TestModel("jakas wartosc");
-        List<TestModel> testModelList = session.createQuery("FROM TestModel ").getResultList();
+        List<TestModel> testModelList = session.createQuery("FROM TestModel T WHERE T.someValue = :some").setParameter("some", "some").getResultList();
         testModelList.forEach(testModel1 -> System.out.println(testModel1.getSomeValue()));
-        session.save(testModel);
         tx.commit();
         session.close();
     }

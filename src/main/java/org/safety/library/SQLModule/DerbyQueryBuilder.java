@@ -1,14 +1,18 @@
 package org.safety.library.SQLModule;
 
+import org.safety.library.initializationModule.utils.ClassFinder;
 import org.safety.library.models.AccessListRow;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Locale;
 
 public class DerbyQueryBuilder implements Builder{
-
-    //example sql query
-    private String exampleSQL = "select testmodel0_.testModelID as testmode1_2_, testmodel0_.someValue as somevalu2_2_ from test_model testmodel0_";
 
     private String[] splitQueryOnSpaces(String sql){
         return sql.split(" ");
@@ -19,6 +23,28 @@ public class DerbyQueryBuilder implements Builder{
             return s.substring(0, s.length() - suffix.length());
         }
         return s;
+    }
+
+    private String getIDColumnName(String className) throws Exception {
+        ClassFinder classFinder = new ClassFinder();
+        List<Class> classes = classFinder.getAllClasses();
+        for (Class clazz: classes){
+            if(clazz.getSimpleName().equals(className)){
+                for(Field field: clazz.getDeclaredFields()){
+                    for(Annotation annotation: field.getAnnotations()){
+                        if(annotation instanceof Id){
+                            if(field.getAnnotation(Column.class) == null){
+                                return field.getName();
+                            }
+                            else {
+                                return field.getAnnotation(Column.class).name();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        throw new Exception("No column annotated with @Id annotation in "+className+" class");
     }
 
     @Override
@@ -49,20 +75,28 @@ public class DerbyQueryBuilder implements Builder{
     }
 
     @Override
-    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql) {
+    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql) throws Exception {
         String result = "";
+        String idColumnName = "";
+        if(accessListRows.size() > 0){
+            idColumnName = getIDColumnName(accessListRows.get(0).getTableName());
+        }
         for(AccessListRow accessListRow: accessListRows){
-            result += " "+accessListRow.getTableName()+"."+"id = "+accessListRow.getProtectedDataId()+" and ";
+            String tableName = accessListRow.getTableName().toLowerCase(Locale.ROOT);
+            if(tableName.length() > 10){
+                tableName = tableName.substring(0, 10);
+            }
+            result += " "+tableName+"0_."+idColumnName+" = "+accessListRow.getProtectedDataId()+" or ";
         }
         if(!alreadyHasWhereClause(sql)){
             result = " where "+result;
-            result = DerbyQueryBuilder.removeSuffix(result, "and ");
+            result = DerbyQueryBuilder.removeSuffix(result, "or ");
         }
         return result;
     }
 
     @Override
-    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql) {
+    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql) throws Exception {
         String[] splitedSql = splitStringOnAdditionPlace(sql);
         return splitedSql[0]+prepareSQLAddition(accessListRows, sql)+splitedSql[1];
     }
