@@ -19,6 +19,10 @@ public class QueryInterceptor extends EmptyInterceptor {
         System.out.println(preparedSQL);
         System.out.println("used table " + QueryProcessor.getUsedTable(preparedSQL));
 
+        if(QueryProcessor.getQueryType((preparedSQL)).equals(QueryType.SELECT)){
+            return "select testmodel0_.testModelID as testmode1_2_, testmodel0_.someValue as somevalu2_2_ from test_model testmodel0_ where testmodel0_.testModelID = 5";
+        }
+
         //TODO
         // We do not have initialized module
         // RolesPrivilegesMap rolesPrivilegesMap = new RolesPrivilegesMap(QueryProcessor.getUsedTable(preparedSQL));

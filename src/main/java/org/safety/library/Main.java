@@ -21,9 +21,9 @@ public class Main {
         session.update(testModel);
 
         List<TestModel> testModelList = session.createQuery("FROM TestModel ").getResultList();
-        testModelList.forEach(testModel1 -> System.out.println(testModel1.getSomeValue()));
+        testModelList.forEach(testModel1 -> System.out.println(testModel1.toString()));
 
-        session.delete(testModel);
+        // session.delete(testModel);
 
         tx.commit();
         session.close();
