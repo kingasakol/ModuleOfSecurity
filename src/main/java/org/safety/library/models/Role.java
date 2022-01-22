@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,9 +14,8 @@ public class Role {
 
     private String name;
 
-
     @OneToMany
-    private List<DefaultPrivilige> defaultPriviliges;
+    private List<DefaultPrivilige> privs;
 
     public Role() {}
 
@@ -33,6 +33,14 @@ public class Role {
 
     public String getName() {
         return name;
+    }
+
+    public void setDefaultPriviliges(List<DefaultPrivilige> privs){
+        this.privs = privs;
+    }
+
+    public List<DefaultPrivilige> getDefaultPriviliges() {
+        return privs;
     }
 
     @Override

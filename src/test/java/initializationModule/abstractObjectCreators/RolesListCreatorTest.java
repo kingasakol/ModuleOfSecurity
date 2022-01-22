@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.safety.library.initializationModule.JSONMapping;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesList;
+import org.safety.library.initializationModule.abstractMappingUsers.RolesListUser;
 import org.safety.library.initializationModule.abstractObjectCreators.RolesListCreator;
 import org.safety.library.initializationModule.mappingFactories.RolesListJSONMapping;
 
@@ -32,24 +33,24 @@ public class RolesListCreatorTest {
             RolesList rolesList = rolesListCreator.createRolesList(jsonMapping);
             //System.out.println(rolesList.getRoles());
             assertEquals(rolesList.getRoles().size(), 3);
-            assertEquals(rolesList.getRoles().get(0).get(0), "admin");
-            assertEquals(rolesList.getRoles().get(1).get(0), "ksiegowy");
-            assertEquals(rolesList.getRoles().get(2).get(0), "robol");
-
-            assertEquals(rolesList.getRoles().get(0).get(1),"Klasa");
-            assertEquals(rolesList.getRoles().get(0).get(2),"true");
-            assertEquals(rolesList.getRoles().get(0).get(3),"true");
-            assertEquals(rolesList.getRoles().get(0).get(4),"true");
-
-            assertEquals(rolesList.getRoles().get(0).get(5),"InnaKlasa");
-            assertEquals(rolesList.getRoles().get(0).get(6),"true");
-            assertEquals(rolesList.getRoles().get(0).get(7),"true");
-            assertEquals(rolesList.getRoles().get(0).get(8),"true");
+            assertEquals(rolesList.getRoles().get(0).getName(), "admin");
+            assertEquals(rolesList.getRoles().get(1).getName(), "ksiegowy");
+            assertEquals(rolesList.getRoles().get(2).getName(), "robol");
+//
+//            assertEquals(rolesList.getRoles().get(0).get(1),"Klasa");
+//            assertEquals(rolesList.getRoles().get(0).get(2),"true");
+//            assertEquals(rolesList.getRoles().get(0).get(3),"true");
+//            assertEquals(rolesList.getRoles().get(0).get(4),"true");
+//
+//            assertEquals(rolesList.getRoles().get(0).get(5),"InnaKlasa");
+//            assertEquals(rolesList.getRoles().get(0).get(6),"true");
+//            assertEquals(rolesList.getRoles().get(0).get(7),"true");
+//            assertEquals(rolesList.getRoles().get(0).get(8),"true");
 
 
 //            Don't know if that below should work bc there is issue with database
-//            RolesListUser rolesListUser = new RolesListUser(rolesList);
-//            rolesListUser.use();
+            RolesListUser rolesListUser = new RolesListUser(rolesList);
+            rolesListUser.use();
         }
     }
 }

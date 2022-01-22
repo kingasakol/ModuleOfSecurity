@@ -2,6 +2,7 @@ package org.safety.library.initializationModule.abstractObjectCreators;
 
 import org.safety.library.initializationModule.JSONMapping;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesList;
+import org.safety.library.models.DefaultPrivilige;
 import org.safety.library.models.Role;
 
 import java.util.*;
@@ -10,15 +11,34 @@ import java.util.*;
 public class RolesListCreator {
 
     public RolesList createRolesList(JSONMapping mapping){
-//        List<String> rawStringList = mapping.getMappedData().stream().map(list -> list.get(0)).toList();
-//        List<String> stringList = new ArrayList<>(rawStringList);
-//        stringList.remove(0);
-//        // Remove "RolesList" (name JSONFile)
-//        // TODO
-//        List<List<String>> rolesList = stringList.stream().map(List<String>::new).toList();
         List<List<String>> rolesList = mapping.getMappedData();
         rolesList.remove(0);
-        return new RolesList(rolesList);
+        List<Role> result = new LinkedList<Role>();
+        for(List<String> roleWithPrivs : rolesList){
+            Role newRole = new Role(roleWithPrivs.get(0));
+            List<DefaultPrivilige> privList = new LinkedList<DefaultPrivilige>();
+            int i = 1;
+            while( i+3 < roleWithPrivs.size()){
+                String name = roleWithPrivs.get(i);
+                boolean canRead = this.parseString(roleWithPrivs.get(i+1));
+                boolean canUpdate = this.parseString(roleWithPrivs.get(i+2));
+                boolean canDelete = this.parseString(roleWithPrivs.get(i+3));
+                DefaultPrivilige priv = new DefaultPrivilige(newRole, name, canRead, canUpdate, canDelete);
+                privList.add(priv);
+            }
+            newRole.setDefaultPriviliges(privList);
+            result.add(newRole);
+        }
+        return new RolesList(result);
+    }
+
+    private boolean parseString(String param){
+        if(param == "true"){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
 }

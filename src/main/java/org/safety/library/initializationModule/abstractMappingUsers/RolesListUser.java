@@ -19,7 +19,7 @@ public class RolesListUser implements JSONMappingUser {
 
     @Override
     public void use() {
-        for (List<String> role : this.rolesList.getRoles()) {
+        for (Role role : this.rolesList.getRoles()) {
             Session session = SessionProvider.getSession();
             Transaction tx = session.beginTransaction();
             session.save(role);
