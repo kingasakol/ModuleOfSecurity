@@ -35,12 +35,7 @@ public class RolesListCreator {
     }
 
     private boolean parseString(String param){
-        if(param.equals("true")){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Boolean.parseBoolean(param);
     }
 
 }
