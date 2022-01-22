@@ -25,5 +25,11 @@ public class TestModel {
 
     public TestModel() {}
 
-
+    @Override
+    public String toString() {
+        return "TestModel{" +
+                "testModelID=" + testModelID +
+                ", someValue='" + someValue + '\'' +
+                '}';
+    }
 }

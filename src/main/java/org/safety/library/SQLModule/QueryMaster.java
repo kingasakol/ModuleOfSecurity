@@ -3,7 +3,6 @@ package org.safety.library.SQLModule;
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 
 public class QueryMaster {
-
     private String sql;
 
     public QueryMaster(String sql){

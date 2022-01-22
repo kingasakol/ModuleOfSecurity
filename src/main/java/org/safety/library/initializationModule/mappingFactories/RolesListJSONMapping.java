@@ -45,9 +45,10 @@ public class RolesListJSONMapping implements JSONMappingFactory {
     private List<String> parseOneRow(JSONObject row){
         List<String> parsedRow = new LinkedList<>();
         parsedRow.add((String) row.get("role"));
+        parsedRow.addAll(this.getEntityPrivilages(row));
         return parsedRow;
     }
-
+    // TODO
     private JSONMapping checkIfOnlyUniqueNames(JSONMapping jsonMapping) throws Exception{
         String[] names = jsonMapping.getMappedData().stream().map(row -> row.get(0)).toArray(String[]::new);
         Map<String, Boolean> checkMap = new HashMap<>();
@@ -60,5 +61,21 @@ public class RolesListJSONMapping implements JSONMappingFactory {
             checkMap.put(n, true);
         }
         return jsonMapping;
+    }
+
+    private List<String> getEntityPrivilages(JSONObject row){
+        List<String> entityPrivilages = new LinkedList<>();
+        JSONArray privilages = (JSONArray) row.get("privilages");
+        if(privilages == null){
+            return new LinkedList<>();
+        }
+        for(int i=0; i< privilages.size(); i++){
+            JSONObject entity = (JSONObject) privilages.get(i);
+            entityPrivilages.add((String) entity.get("entityName"));
+            entityPrivilages.add((String) entity.get("canRead"));
+            entityPrivilages.add((String) entity.get("canUpdate"));
+            entityPrivilages.add((String) entity.get("canDelete"));
+        }
+        return entityPrivilages;
     }
 }

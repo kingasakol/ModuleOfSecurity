@@ -1,0 +1,73 @@
+{
+  "name": "RolesList",
+  "data": [
+    {
+      "role": "admin",
+      "privilages" : [
+      {
+        "entityName": "SomeProtectedClass1",
+        "canRead": "true",
+        "canUpdate": "true",
+        "canDelete": "true"
+      },
+        {
+          "entityName": "SomeProtectedClass2",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "true"
+        }
+      ]
+    },
+    {
+      "role": "ksiegowy",
+      "privilages" : [
+        {
+          "entityName": "SomeProtectedClass1",
+          "canRead": "true",
+          "canUpdate": "false",
+          "canDelete": "false"
+        },
+        {
+          "entityName": "SomeProtectedClass2",
+          "canRead": "true",
+          "canUpdate": "false",
+          "canDelete": "false"
+        }
+      ]
+    },
+    {
+      "role": "tester",
+      "privilages" : [
+        {
+          "entityName": "SomeProtectedClass1",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "false"
+        },
+        {
+          "entityName": "SomeProtectedClass2",
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "false"
+        }
+      ]
+    },
+    {
+      "role": "hacker",
+      "privilages" : [
+        {
+          "entityName": "SomeProtectedClass1",
+          "canRead": "false",
+          "canUpdate": "false",
+          "canDelete": "false"
+        },
+        {
+          "entityName": "SomeProtectedClass2",
+          "canRead": "false",
+          "canUpdate": "false",
+          "canDelete": "false"
+        }
+      ]
+    }
+  ]
+}

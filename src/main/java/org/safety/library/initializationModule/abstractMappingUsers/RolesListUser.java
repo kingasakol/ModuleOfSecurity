@@ -7,6 +7,8 @@ import org.safety.library.initializationModule.JSONMappingUser;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesList;
 import org.safety.library.models.Role;
 
+import java.util.List;
+
 
 public class RolesListUser implements JSONMappingUser {
     private final RolesList rolesList;
@@ -22,7 +24,6 @@ public class RolesListUser implements JSONMappingUser {
             Transaction tx = session.beginTransaction();
             session.save(role);
             tx.commit();
-            session.close();
         }
     }
 }
