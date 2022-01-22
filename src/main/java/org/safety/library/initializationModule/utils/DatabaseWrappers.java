@@ -38,7 +38,7 @@ public class DatabaseWrappers {
         return roles.get(0);
     }
 
-    public List<AccessListRow> getAccessForRole(Role role) throws AccessListRowNotFoundException {
+    public List<AccessListRow> getAccessForRole(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
         List<AccessListRow> accessListRow = session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();

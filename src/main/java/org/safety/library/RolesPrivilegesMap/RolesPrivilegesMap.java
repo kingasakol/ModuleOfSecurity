@@ -49,11 +49,7 @@ public class RolesPrivilegesMap {
 
 
     private void instantiatePrivileges() {
-        try {
-            this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
-        } catch (AccessListRowNotFoundException e) {
-            e.printStackTrace();
-        }
+        this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
     }
 
 
