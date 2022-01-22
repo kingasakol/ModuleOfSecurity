@@ -70,26 +70,21 @@ public class RolesListCreatorTest {
             assertEquals(adminInnaKlasa.isCanUpdate(), true);
 
 
-            assertEquals(ksiegowyKlasa.isCanDelete(), true);
-            assertEquals(ksiegowyKlasa.isCanRead(), false);
+            assertEquals(ksiegowyKlasa.isCanDelete(), false);
+            assertEquals(ksiegowyKlasa.isCanRead(), true);
             assertEquals(ksiegowyKlasa.isCanUpdate(), false);
 
-            assertEquals(ksiegowyInnaKlasa.isCanDelete(), true);
+            assertEquals(ksiegowyInnaKlasa.isCanDelete(), false);
             assertEquals(ksiegowyInnaKlasa.isCanRead(), true);
-            assertEquals(ksiegowyInnaKlasa.isCanUpdate(), false);
+            assertEquals(ksiegowyInnaKlasa.isCanUpdate(), true);
 
-            assertEquals(robolKlasa.isCanDelete(), true);
-            assertEquals(robolKlasa.isCanRead(), false);
+            assertEquals(robolKlasa.isCanDelete(), false);
+            assertEquals(robolKlasa.isCanRead(), true);
             assertEquals(robolKlasa.isCanUpdate(), false);
 
-            assertEquals(robolInnaKlasa.isCanDelete(), true);
-            assertEquals(robolInnaKlasa.isCanRead(), false);
+            assertEquals(robolInnaKlasa.isCanDelete(), false);
+            assertEquals(robolInnaKlasa.isCanRead(), true);
             assertEquals(robolInnaKlasa.isCanUpdate(), false);
-
-
-//            Don't know if that below should work bc there is issue with database
-            RolesListUser rolesListUser = new RolesListUser(rolesList);
-            rolesListUser.use();
         }
     }
 }

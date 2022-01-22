@@ -25,6 +25,7 @@ public class RolesListCreator {
                 boolean canDelete = this.parseString(roleWithPrivs.get(i+3));
                 DefaultPrivilige priv = new DefaultPrivilige(newRole, name, canRead, canUpdate, canDelete);
                 privList.add(priv);
+                i += 4;
             }
             newRole.setDefaultPriviliges(privList);
             result.add(newRole);
@@ -33,7 +34,7 @@ public class RolesListCreator {
     }
 
     private boolean parseString(String param){
-        if(param == "true"){
+        if(param.equals("true")){
             return true;
         }
         else{
