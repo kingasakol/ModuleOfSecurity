@@ -1,6 +1,7 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "AccessList")
@@ -86,5 +87,18 @@ public class AccessListRow {
 
     public long getId() {
         return id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AccessListRow that = (AccessListRow) o;
+        return protectedDataId == that.protectedDataId && canRead == that.canRead && canDelete == that.canDelete && canUpdate == that.canUpdate && role.equals(that.role) && tableName.equals(that.tableName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(role, protectedDataId, tableName, canRead, canDelete, canUpdate);
     }
 }
