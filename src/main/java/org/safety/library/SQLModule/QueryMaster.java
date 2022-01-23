@@ -3,13 +3,13 @@ package org.safety.library.SQLModule;
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 
 public class QueryMaster {
-    private String sql;
+    private final Builder queryBuilder;
 
-    public QueryMaster(String sql){
-        this.sql = sql;
+    public QueryMaster(){
+        queryBuilder = new DerbyQueryBuilder();
     }
 
-    public String buildQuery(RolesPrivilegesMap rolesPrivilegesMap, Builder builder) throws Exception {
-        return builder.returnPreparedSQL(rolesPrivilegesMap.getPrivileges(), this.sql);
+    public String buildQuery(String sql, RolesPrivilegesMap rolesPrivilegesMap) throws Exception {
+        return queryBuilder.returnPreparedSQL(rolesPrivilegesMap.getFilteredList(), sql);
     }
 }

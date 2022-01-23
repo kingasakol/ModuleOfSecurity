@@ -1,6 +1,5 @@
 package org.safety.library.RolesPrivilegesMap;
 
-import org.safety.library.initializationModule.Exceptions.AddPrivillegeRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.initializationModule.utils.PrivilegesReader;
@@ -16,15 +15,16 @@ public class RolesPrivilegesMap {
     private final DatabaseWrappers databaseWrappers = new DatabaseWrappers();
 
     private final List <AccessListRow> privileges;
-    private List<AccessListRow> filteredList;
-    private boolean canCreate;
+    private final List<AccessListRow> filteredList;
     private Role concreteRole = null;
+    private boolean canCreate;
+
 
     public RolesPrivilegesMap(String tableName) {
         initConcreteRole();
         instantiateCanCrate(tableName);
         this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
-        filterList(tableName);
+        this.filteredList = filterList(tableName);
     }
 
     private void initConcreteRole() {
@@ -47,13 +47,13 @@ public class RolesPrivilegesMap {
         this.canCreate = false;
     }
 
-    private void filterList(String entityName) {
+    private List<AccessListRow> filterList(String entityName) {
         Stream<AccessListRow> accessListRowStream = this.privileges.stream();
         accessListRowStream
                 .filter(accessListRow -> (accessListRow.isCanRead()))
                 .filter(accessListRow -> accessListRow.getTableName().equals(entityName))
                 .filter(accessListRow -> accessListRow.getRole() == this.concreteRole);
-        this.filteredList = accessListRowStream.collect(Collectors.toList());
+        return accessListRowStream.collect(Collectors.toList());
     }
 
     public List<AccessListRow> getFilteredList() {

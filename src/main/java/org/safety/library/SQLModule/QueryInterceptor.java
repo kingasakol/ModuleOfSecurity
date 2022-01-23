@@ -4,8 +4,8 @@ package org.safety.library.SQLModule;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
-import org.safety.library.initializationModule.utils.DatabaseWrappers;
-import org.safety.library.models.Role;
+import org.safety.library.initializationModule.Exceptions.AccessDeniedException;
+
 
 import java.io.Serializable;
 
@@ -13,17 +13,33 @@ public class QueryInterceptor extends EmptyInterceptor {
 
     @Override
     public String onPrepareStatement(String sql) {
+        RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(QueryProcessor.getUsedTable(sql));
 
-        String preparedSQL = sql;
-        System.out.println("Interceptor onPrepareStatement");
-        System.out.println(preparedSQL);
-        System.out.println("used table " + QueryProcessor.getUsedTable(preparedSQL));
+        try {
+            QueryType type = QueryProcessor.getQueryType(sql);
+            switch (type) {
+                case SELECT -> {
+                     QueryMaster master = new QueryMaster();
+                     return master.buildQuery(sql, privilegesMap);
+                }
+                case INSERT -> {
+                    if(!privilegesMap.canCreate()){
+                        throw new AccessDeniedException("Insert Denied");
+                    }
+                    break;
+                }
+                case UPDATE -> {
+                    break; //TODO
+                }
+                case DELETE -> {
+                    break; //TODO
+                }
+            }
+        } catch (Exception exception){
+            exception.printStackTrace();
+        }
 
-        //TODO
-        // We do not have initialized module
-        // RolesPrivilegesMap rolesPrivilegesMap = new RolesPrivilegesMap(QueryProcessor.getUsedTable(preparedSQL));
-        // then filter them and push data to QueryBuilder
-        return super.onPrepareStatement(preparedSQL);
+        return super.onPrepareStatement(sql);
     }
 
     // OnDelete and onSave run before onPrepareStatement !!!
@@ -48,8 +64,4 @@ public class QueryInterceptor extends EmptyInterceptor {
         return super.onSave(entity, id, state, propertyNames, types);
     }
 
-    public RolesPrivilegesMap filterRolesPrivilegesMap(RolesPrivilegesMap rolesPrivilegesMap) {
-        //TODO
-        return null;
-    }
 }
