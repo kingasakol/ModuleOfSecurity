@@ -22,15 +22,10 @@ public class RolesPrivilegesMap {
 
     public RolesPrivilegesMap(DatabaseWrappers databaseWrappers, String tableName) {
         this.databaseWrappers = databaseWrappers;
-        System.out.println("Hop w przepaść");
         initConcreteRole();
-        System.out.println("initConcreteRole");
         instantiateCanCrate(tableName);
-        System.out.println("instantiateCanCrate");
         this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
-        System.out.println("privileges");
         this.filteredList = filterList(tableName);
-        System.out.println("filteredList");
     }
 
     private void initConcreteRole() {
@@ -53,13 +48,23 @@ public class RolesPrivilegesMap {
         this.canCreate = false;
     }
 
-    private List<AccessListRow> filterList(String entityName) {
+    private List<AccessListRow> filterList(String tableName) {
         Stream<AccessListRow> accessListRowStream = this.privileges.stream();
         accessListRowStream
                 .filter(accessListRow -> (accessListRow.isCanRead()))
-                .filter(accessListRow -> accessListRow.getTableName().equals(entityName))
+                .filter(accessListRow -> accessListRow.getTableName().equals(tableName))
                 .filter(accessListRow -> accessListRow.getRole() == this.concreteRole);
         return accessListRowStream.collect(Collectors.toList());
+    }
+
+    public AccessListRow getRowPrivileges(Long id) {
+        Stream<AccessListRow> filteredListRowStream = this.filteredList.stream();
+        filteredListRowStream.filter(accessListRow -> (accessListRow.getId() == id)).collect(Collectors.toList());
+
+        if(filteredListRowStream.toList().size() != 1){
+            throw new IllegalArgumentException();
+        }
+        return filteredListRowStream.toList().get(0);
     }
 
     public List<AccessListRow> getFilteredList() {

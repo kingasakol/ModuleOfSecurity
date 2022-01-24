@@ -24,6 +24,16 @@ public class QueryProcessor {
         throw new IllegalArgumentException();
     }
 
+    public static Long getId(String sql) {
+        String[] stringList = sql.split(" ");
+        for (int i = 0; i < stringList.length; i++) {
+            if (stringList[i].equalsIgnoreCase("id") && (i + 1) < stringList.length) {
+                return Long.parseLong(stringList[i + 1]);
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
     public static String getUsedTable(String sql) {
         QueryType queryType = QueryProcessor.getQueryType(sql);
         return switch (queryType) {
