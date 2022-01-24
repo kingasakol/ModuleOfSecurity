@@ -1,6 +1,5 @@
 package org.safety.library.RolesPrivilegesMap;
 
-import org.safety.library.initializationModule.Exceptions.AddPrivillegeRowNotFoundException;
 import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.initializationModule.utils.PrivilegesReader;
@@ -19,7 +18,7 @@ public class RolesPrivilegesMap {
 
     public RolesPrivilegesMap(String tableName) {
         initConcreteRole();
-        instantiateCanCrate(tableName);
+        instantiateCanCreate(tableName);
         this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
     }
 
@@ -32,7 +31,7 @@ public class RolesPrivilegesMap {
     }
 
 
-    private void instantiateCanCrate(String tableName) {
+    private void instantiateCanCreate(String tableName) {
         List<AddPrivilege> addPrivilegeList = databaseWrappers.getAddPrivilege(this.concreteRole);
         for (AddPrivilege addPrivilege : addPrivilegeList) {
             if(addPrivilege.getTableName().equals(tableName)) {
