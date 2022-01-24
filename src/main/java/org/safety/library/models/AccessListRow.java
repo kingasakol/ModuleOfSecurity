@@ -77,6 +77,19 @@ public class AccessListRow {
         this.canDelete = canDelete;
     }
 
+    @Override
+    public String toString() {
+        return "\nAccessListRow{" +
+                "id=" + id +
+                ", role=" + role +
+                ", protectedDataId=" + protectedDataId +
+                ", tableName='" + tableName + '\'' +
+                ", canRead=" + canRead +
+                ", canDelete=" + canDelete +
+                ", canUpdate=" + canUpdate +
+                '}';
+    }
+
     public boolean isCanUpdate() {
         return canUpdate;
     }

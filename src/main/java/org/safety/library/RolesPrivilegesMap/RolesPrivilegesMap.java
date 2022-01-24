@@ -50,21 +50,23 @@ public class RolesPrivilegesMap {
 
     private List<AccessListRow> filterList(String tableName) {
         Stream<AccessListRow> accessListRowStream = this.privileges.stream();
-        accessListRowStream
-                .filter(accessListRow -> (accessListRow.isCanRead()))
-                .filter(accessListRow -> accessListRow.getTableName().equals(tableName))
-                .filter(accessListRow -> accessListRow.getRole() == this.concreteRole);
-        return accessListRowStream.collect(Collectors.toList());
+        System.out.println(this.concreteRole.getName());
+        return accessListRowStream
+                .filter(AccessListRow::isCanRead)
+                .filter(accessListRow -> accessListRow.getTableName().equalsIgnoreCase(tableName))
+                .filter(accessListRow -> accessListRow.getRole().getName().equals(this.concreteRole.getName()))
+                .collect(Collectors.toList());
     }
 
     public AccessListRow getRowPrivilegesById(Long id) {
         Stream<AccessListRow> filteredListRowStream = this.filteredList.stream();
-        filteredListRowStream.filter(accessListRow -> (accessListRow.getId() == id)).collect(Collectors.toList());
+        List<AccessListRow> filteredList = filteredListRowStream
+                .filter(accessListRow -> (accessListRow.getId() == id)).toList();
 
-        if(filteredListRowStream.toList().size() != 1){
+        if(filteredList.size() != 1){
             throw new IllegalArgumentException();
         }
-        return filteredListRowStream.toList().get(0);
+        return filteredList.get(0);
     }
 
     public List<AccessListRow> getFilteredList() {
@@ -77,5 +79,13 @@ public class RolesPrivilegesMap {
 
     public boolean canCreate() {
         return this.canCreate;
+    }
+
+    @Override
+    public String toString() {
+        return "RolesPrivilegesMap{" +
+                "privileges=" + privileges +
+                ", filteredList=" + filteredList +
+                '}';
     }
 }

@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.safety.library.hibernate.SessionProvider;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass2;
 import org.safety.library.initializationModule.testEntities.TestUsers;
+import org.safety.library.initializationModule.utils.Authenticator;
 import org.safety.library.models.*;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -22,7 +24,7 @@ public class InitializationModuleIntegrationTests {
     Session session = SessionProvider.getSession();
 
     @BeforeEach
-    public void prepareForIntegrationTest(){
+    public void prepareForIntegrationTest() throws Exception {
         session.beginTransaction();
         session.createQuery("DELETE FROM TestUsers ").executeUpdate();
         session.createQuery("DELETE FROM SomeProtectedClass1 ").executeUpdate();
@@ -46,16 +48,40 @@ public class InitializationModuleIntegrationTests {
         this.session.save(someProtectedClass21);
         this.session.save(someProtectedClass22);
         session.getTransaction().commit();
-    }
 
-    @Test
-    public void initializationModuleIntegrationTest() throws Exception {
         //given
         Session session = SessionProvider.getSession();
         Initializer initializer = new Initializer();
 
         //when
         initializer.initialize();
+    }
+
+    @Test
+    public void safelySelectTest() throws Exception {
+        List<SomeProtectedClass1> ListRows;
+
+        Authenticator.getInstance().setUserId(1);
+        ListRows = session.createQuery("FROM SomeProtectedClass1 ").list();
+        System.out.println("OUT SRAJ");
+        System.out.println(ListRows);
+
+        Authenticator.getInstance().setUserId(1);
+        ListRows = session.createQuery("FROM SomeProtectedClass2 ").list();
+        System.out.println("OUT SRAJ");
+        System.out.println(ListRows);
+
+        System.out.println("PFFF" + session.createQuery("FROM Role ").list());
+
+        Authenticator.getInstance().setUserId(4);
+        ListRows = session.createQuery("FROM SomeProtectedClass1 ").list();
+        System.out.println("OUT SRAJ");
+        System.out.println(ListRows);
+    }
+
+
+    @Test
+    public void initializationModuleIntegrationTest() throws Exception {
 
         //then
         List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();

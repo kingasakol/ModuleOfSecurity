@@ -25,7 +25,7 @@ public class DatabaseWrappers {
 
     public Role getRoleByUserID(Long userId) throws RoleForUserNotFoundException {
         Session session = SessionProvider.getSession();
-        List<Role> roles = session.createQuery("FROM UsersRole U WHERE U.userId = "+Long.toString(userId)).list();
+        List<Role> roles = session.createQuery("FROM Role R WHERE R.id = "+Long.toString(userId)).list();
 
         if(roles.size() != 1){
             throw new RoleForUserNotFoundException("There are < " + roles.size() + " > associated with this userId in a database");
@@ -36,14 +36,12 @@ public class DatabaseWrappers {
     public List<AccessListRow> getAccessForRole(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
-        List<AccessListRow> accessListRow = session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
-        return accessListRow;
+        return session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
     }
 
     public List<AddPrivilege> getAddPrivilege(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
-        List<AddPrivilege> addPrivilege = session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
-        return addPrivilege;
+        return session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
     }
 }

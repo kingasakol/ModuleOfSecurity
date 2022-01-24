@@ -44,12 +44,14 @@ public class QueryInterceptor extends EmptyInterceptor {
     @Override
     public String onPrepareStatement(String sql) {
         String tableName = QueryProcessor.getUsedTable(sql).toLowerCase();
+        System.out.println(sql + " SRAJ "  +tableName);
         if (goTrough.contains(tableName)) {
             return super.onPrepareStatement(sql);
         }
 
         List<String> protectedTables = getProtectedTables();
         if (!protectedTables.contains(tableName)) {
+            System.out.println("NIE SRAJ + " + protectedTables);
             return super.onPrepareStatement(sql);
         }
 
@@ -58,7 +60,10 @@ public class QueryInterceptor extends EmptyInterceptor {
         try {
             switch (type) {
                 case SELECT -> {
+                    System.out.println("SELECT SRAJ");
                     QueryMaster master = new QueryMaster();
+                    System.out.println(privilegesMap);
+                    System.out.println(master.buildQuery(sql, privilegesMap));
                     return master.buildQuery(sql, privilegesMap);
                 }
                 case INSERT -> {
