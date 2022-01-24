@@ -57,7 +57,7 @@ public class RolesPrivilegesMap {
         return accessListRowStream.collect(Collectors.toList());
     }
 
-    public AccessListRow getRowPrivileges(Long id) {
+    public AccessListRow getRowPrivilegesById(Long id) {
         Stream<AccessListRow> filteredListRowStream = this.filteredList.stream();
         filteredListRowStream.filter(accessListRow -> (accessListRow.getId() == id)).collect(Collectors.toList());
 

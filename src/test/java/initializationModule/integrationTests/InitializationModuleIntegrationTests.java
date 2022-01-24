@@ -58,7 +58,6 @@ public class InitializationModuleIntegrationTests {
         initializer.initialize();
 
         //then
-        session = SessionProvider.getSession();
         List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();
         List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").list();
         List<Role> roles = session.createQuery("FROM Role ").list();
@@ -77,7 +76,6 @@ public class InitializationModuleIntegrationTests {
         assertEquals(accessListRows.get(10), new AccessListRow(new Role("admin"), 1, "SomeProtectedClass2", true, true, true));
         assertEquals(accessListRows.get(12), new AccessListRow(new Role("tester"), 1, "SomeProtectedClass2", true, true, false));
 
-        System.out.println("MIKMIK" + roles);
         assertEquals(roles.size(), 4);
         assertEquals(roles.get(0), new Role("admin"));
         assertEquals(roles.get(1), new Role("ksiegowy"));

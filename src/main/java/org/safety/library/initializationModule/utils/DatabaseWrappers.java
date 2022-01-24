@@ -20,7 +20,6 @@ public class DatabaseWrappers {
         queriedRoles.forEach(role -> {
             result.put(role.getName(), role);
         });
-        session.close();
         return result;
     }
 
@@ -31,7 +30,6 @@ public class DatabaseWrappers {
         if(roles.size() != 1){
             throw new RoleForUserNotFoundException("There are < " + roles.size() + " > associated with this userId in a database");
         }
-        session.close();
         return roles.get(0);
     }
 
@@ -39,8 +37,6 @@ public class DatabaseWrappers {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
         List<AccessListRow> accessListRow = session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
-
-        session.close();
         return accessListRow;
     }
 
@@ -48,8 +44,6 @@ public class DatabaseWrappers {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
         List<AddPrivilege> addPrivilege = session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
-
-        session.close();
         return addPrivilege;
     }
 }
