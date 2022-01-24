@@ -95,7 +95,7 @@ public class Initializer {
         return rolesForUsersUser;
     }
 
-    private DataAccessUser initializeDataAccessUser(String[] jsonPaths) throws Exception{
+    private DataAccessUser initializeDataAccessUser(String[] jsonPaths) throws Exception {
         DataAccessUser dataAccessUser = new DataAccessUser(
                 Arrays.stream(jsonPaths).map(jsonPath -> {
                     try {

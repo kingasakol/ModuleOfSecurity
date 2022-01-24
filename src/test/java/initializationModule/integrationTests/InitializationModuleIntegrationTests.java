@@ -58,11 +58,12 @@ public class InitializationModuleIntegrationTests {
         initializer.initialize();
 
         //then
-        List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").getResultList();
-        List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").getResultList();
-        List<Role> roles = session.createQuery("FROM Role ").getResultList();
-        List<UsersRole> usersRoles = session.createQuery("FROM UsersRole ").getResultList();
-        List<HibernateSelect> hibernateSelects = session.createQuery("FROM HibernateSelect ").getResultList();
+        session = SessionProvider.getSession();
+        List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();
+        List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").list();
+        List<Role> roles = session.createQuery("FROM Role ").list();
+        List<UsersRole> usersRoles = session.createQuery("FROM UsersRole ").list();
+        List<HibernateSelect> hibernateSelects = session.createQuery("FROM HibernateSelect ").list();
         List<DefaultPrivilige> adminDefs = roles.get(0).getDefaultPriviliges();
         List<DefaultPrivilige> ksiegowyDefs = roles.get(1).getDefaultPriviliges();
         List<DefaultPrivilige> testerDefs = roles.get(2).getDefaultPriviliges();
@@ -76,6 +77,7 @@ public class InitializationModuleIntegrationTests {
         assertEquals(accessListRows.get(10), new AccessListRow(new Role("admin"), 1, "SomeProtectedClass2", true, true, true));
         assertEquals(accessListRows.get(12), new AccessListRow(new Role("tester"), 1, "SomeProtectedClass2", true, true, false));
 
+        System.out.println("MIKMIK" + roles);
         assertEquals(roles.size(), 4);
         assertEquals(roles.get(0), new Role("admin"));
         assertEquals(roles.get(1), new Role("ksiegowy"));

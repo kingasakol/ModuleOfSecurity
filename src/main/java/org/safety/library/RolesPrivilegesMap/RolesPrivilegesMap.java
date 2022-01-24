@@ -12,19 +12,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class RolesPrivilegesMap {
-    private final DatabaseWrappers databaseWrappers = new DatabaseWrappers();
+    private final DatabaseWrappers databaseWrappers;
 
-    private final List <AccessListRow> privileges;
+    private final List<AccessListRow> privileges;
     private final List<AccessListRow> filteredList;
     private Role concreteRole = null;
     private boolean canCreate;
 
 
-    public RolesPrivilegesMap(String tableName) {
+    public RolesPrivilegesMap(DatabaseWrappers databaseWrappers, String tableName) {
+        this.databaseWrappers = databaseWrappers;
+        System.out.println("Hop w przepaść");
         initConcreteRole();
+        System.out.println("initConcreteRole");
         instantiateCanCrate(tableName);
+        System.out.println("instantiateCanCrate");
         this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
+        System.out.println("privileges");
         this.filteredList = filterList(tableName);
+        System.out.println("filteredList");
     }
 
     private void initConcreteRole() {

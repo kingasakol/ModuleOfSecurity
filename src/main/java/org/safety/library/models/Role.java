@@ -1,7 +1,6 @@
 package org.safety.library.models;
 
 import javax.persistence.*;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,5 +53,14 @@ public class Role {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", privs=" + privs +
+                '}';
     }
 }

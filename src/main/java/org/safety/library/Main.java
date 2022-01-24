@@ -3,7 +3,6 @@ package org.safety.library;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.safety.library.hibernate.SessionProvider;
-import org.safety.library.initializationModule.Initializer;
 import org.safety.library.models.TestModel;
 
 import java.util.List;
