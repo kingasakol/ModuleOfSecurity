@@ -31,11 +31,11 @@ public class QueryInterceptor extends EmptyInterceptor {
             "UsersRole".toLowerCase(),
             "AddPrivilege".toLowerCase()
     ));
-    private long magickId;
+    private static long magickId;
 
 
     private List<String> getProtectedTables() {
-        Session session = SessionProvider.getSession();
+        Session session = SessionProvider.getSessionWithoutInterceptor();
         List<HibernateSelect> hibernateSelects = session.createQuery("FROM HibernateSelect ").list();
         return hibernateSelects.stream()
                 .map(HibernateSelect::getEntityName)
@@ -117,7 +117,7 @@ public class QueryInterceptor extends EmptyInterceptor {
 //        System.out.println("Interceptor onUpdate");
 //        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
         magickId = (long) id;
-        return true;
+        return false;
     }
 
 }

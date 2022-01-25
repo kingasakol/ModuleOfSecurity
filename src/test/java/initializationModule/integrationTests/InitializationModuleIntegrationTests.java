@@ -42,9 +42,9 @@ public class InitializationModuleIntegrationTests {
         session.getTransaction().commit();
         session.beginTransaction();
         TestUsers testUser1 = new TestUsers((long) 1, "Janek Admin");
-        TestUsers testUser2 = new TestUsers((long) 2, "Zosia ksiegowa");
-        TestUsers testUser3 = new TestUsers((long) 3, "Kacper tester");
-        TestUsers testUser4 = new TestUsers((long) 4, "Anna hacker");
+        TestUsers testUser2 = new TestUsers((long) 4, "Zosia ksiegowa");
+        TestUsers testUser3 = new TestUsers((long) 7, "Kacper tester");
+        TestUsers testUser4 = new TestUsers((long) 10, "Anna hacker");
         someProtectedClass11 = new SomeProtectedClass1("wazne dane11", "inne wazne dane", (long) 1);
         someProtectedClass12 = new SomeProtectedClass1("wazne dane12", "inne wazne dane", (long) 2);
         someProtectedClass21 = new SomeProtectedClass2("wazne dane21", "inne wazne dane", (long) 1);
@@ -111,13 +111,21 @@ public class InitializationModuleIntegrationTests {
     @Test
     public void safelyUpdateTest() {
         // TOSOLVE
-//        Authenticator.getInstance().setUserId(10); // hacker
-//        Transaction tx = session.beginTransaction();
-//
-//        someProtectedClass12.setSomeValue("better hacker");
-//        this.session.update(someProtectedClass12);
-//        Transaction finalTx = tx;
-//        assertDoesNotThrow(() -> finalTx.commit());
+        Authenticator.getInstance().setUserId(10); // hacker
+        Transaction tx = session.beginTransaction();
+
+        someProtectedClass12.setSomeValue("better hacker");
+        this.session.update(someProtectedClass12);
+        final Transaction finalTx = tx;
+        assertDoesNotThrow(() -> finalTx.commit());
+
+        Transaction tx1 = session.beginTransaction();
+
+        Authenticator.getInstance().setUserId(4); // ksiegowy
+        someProtectedClass12.setSomeValue("better ksiegowy");
+        this.session.update(someProtectedClass12);
+        final Transaction finalTx1 = tx;
+        Assertions.assertThrows(RuntimeException.class, () -> finalTx1.commit());
     }
 
     @Test
@@ -143,9 +151,10 @@ public class InitializationModuleIntegrationTests {
         assertEquals(accessListRows.size(), 16);
         assertEquals(accessListRows.get(0), new AccessListRow(new Role("hacker"), 1, "SomeProtectedClass1", false, false, false));
         assertEquals(accessListRows.get(2), new AccessListRow(new Role("admin"), 1, "SomeProtectedClass1", true, true, true));
+        assertEquals(accessListRows.get(3), new AccessListRow(new Role("admin"), 2, "SomeProtectedClass1",true,false,true));
         assertEquals(accessListRows.get(6), new AccessListRow(new Role("ksiegowy"), 1, "SomeProtectedClass1", true, false, false));
         assertEquals(accessListRows.get(10), new AccessListRow(new Role("admin"), 1, "SomeProtectedClass2", true, true, true));
-        assertEquals(accessListRows.get(12), new AccessListRow(new Role("tester"), 1, "SomeProtectedClass2", true, true, false));
+        assertEquals(accessListRows.get(12), new AccessListRow(new Role("tester"), 1, "SomeProtectedClass2", true, false, true));
 
         assertEquals(roles.size(), 4);
         assertEquals(roles.get(0), new Role("admin"));

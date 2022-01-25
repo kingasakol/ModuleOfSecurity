@@ -26,7 +26,7 @@ public class DataAccessUser implements JSONMappingUser {
             if(dataAccess != null){
                 dataAccess.getAccessForEntity().forEach(((role, permissions) -> {
                     permissions.forEach(permission -> {
-                        AccessListRow accessListRow = new AccessListRow(role, permission.getDataId(), dataAccess.getClassType(), permission.isCanRead(), permission.isCanUpdate(), permission.isCanDelete());
+                        AccessListRow accessListRow = new AccessListRow(role, permission.getDataId(), dataAccess.getClassType(), permission.isCanRead(), permission.isCanDelete(), permission.isCanUpdate());
                         session.save(accessListRow);
                     });
                 }));
