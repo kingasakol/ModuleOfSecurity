@@ -7,10 +7,10 @@ import org.hibernate.type.Type;
 
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 import org.safety.library.hibernate.SessionProvider;
-import org.safety.library.initializationModule.Exceptions.AccessDeniedException;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.models.AccessListRow;
 import org.safety.library.models.HibernateSelect;
+import org.safety.library.updateModule.UpdateACL;
 
 
 import java.io.Serializable;
@@ -72,6 +72,7 @@ public class QueryInterceptor extends EmptyInterceptor {
                 if (!privilegesMap.canCreate()) {
                     throw new RuntimeException("Insert Denied");
                 }
+                UpdateACL.updateAfterInsert(tableName, magickId);
             }
             case UPDATE -> {
                 AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
@@ -84,6 +85,7 @@ public class QueryInterceptor extends EmptyInterceptor {
                 if (!accessListRow.isCanDelete()) {
                     throw new RuntimeException("Delete Denied");
                 }
+                UpdateACL.updateAfterDelete(tableName, magickId);
             }
         }
         return super.onPrepareStatement(sql);
@@ -98,6 +100,7 @@ public class QueryInterceptor extends EmptyInterceptor {
         //TODO
 //        System.out.println("Interceptor onSave");
 //        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
+        magickId = (long) id;
         return super.onSave(entity, id, state, propertyNames, types);
     }
 
