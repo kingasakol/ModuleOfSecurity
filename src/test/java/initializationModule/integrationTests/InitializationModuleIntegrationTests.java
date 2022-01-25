@@ -1,5 +1,8 @@
 package initializationModule.integrationTests;
 
+import org.hibernate.Transaction;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.safety.library.initializationModule.Initializer;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass1;
@@ -12,16 +15,23 @@ import org.safety.library.initializationModule.utils.Authenticator;
 import org.safety.library.models.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 @Transactional
 public class InitializationModuleIntegrationTests {
 
     Session session = SessionProvider.getSession();
+    SomeProtectedClass1 someProtectedClass11;
+    SomeProtectedClass1 someProtectedClass12;
+    SomeProtectedClass2 someProtectedClass21;
+    SomeProtectedClass2 someProtectedClass22;
 
     @BeforeEach
     public void prepareForIntegrationTest() throws Exception {
@@ -31,14 +41,14 @@ public class InitializationModuleIntegrationTests {
         session.createQuery("DELETE FROM SomeProtectedClass2 ").executeUpdate();
         session.getTransaction().commit();
         session.beginTransaction();
-        TestUsers testUser1 = new TestUsers((long)1, "Janek Admin");
-        TestUsers testUser2 = new TestUsers((long)2, "Zosia ksiegowa");
-        TestUsers testUser3 = new TestUsers((long)3, "Kacper tester");
-        TestUsers testUser4 = new TestUsers((long)4, "Anna hacker");
-        SomeProtectedClass1 someProtectedClass11 = new SomeProtectedClass1("wazne dane", "inne wazne dane", (long)1);
-        SomeProtectedClass1 someProtectedClass12 = new SomeProtectedClass1("wazne dane", "inne wazne dane", (long)2);
-        SomeProtectedClass2 someProtectedClass21 = new SomeProtectedClass2("wazne dane", "inne wazne dane", (long)1);
-        SomeProtectedClass2 someProtectedClass22 = new SomeProtectedClass2("wazne dane", "inne wazne dane", (long)2);
+        TestUsers testUser1 = new TestUsers((long) 1, "Janek Admin");
+        TestUsers testUser2 = new TestUsers((long) 2, "Zosia ksiegowa");
+        TestUsers testUser3 = new TestUsers((long) 3, "Kacper tester");
+        TestUsers testUser4 = new TestUsers((long) 4, "Anna hacker");
+        someProtectedClass11 = new SomeProtectedClass1("wazne dane11", "inne wazne dane", (long) 1);
+        someProtectedClass12 = new SomeProtectedClass1("wazne dane12", "inne wazne dane", (long) 2);
+        someProtectedClass21 = new SomeProtectedClass2("wazne dane21", "inne wazne dane", (long) 1);
+        someProtectedClass22 = new SomeProtectedClass2("wazne dane22", "inne wazne dane", (long) 2);
         this.session.save(testUser1);
         this.session.save(testUser2);
         this.session.save(testUser3);
@@ -58,31 +68,66 @@ public class InitializationModuleIntegrationTests {
     }
 
     @Test
-    public void safelySelectTest() throws Exception {
-        List<SomeProtectedClass1> ListRows;
+    public void safelySelectTest() {
+        List<SomeProtectedClass1> listRows;
 
-        Authenticator.getInstance().setUserId(1);
-        ListRows = session.createQuery("FROM SomeProtectedClass1 ").list();
-        System.out.println("OUT SRAJ");
-        System.out.println(ListRows);
+        Authenticator.getInstance().setUserId(1); // admin
+        listRows = session.createQuery("FROM SomeProtectedClass1 ").list();
+        List<String> adminAccessClass1 = Arrays.asList("wazne dane11", "wazne dane12");
+        Assertions.assertEquals(listRows.stream().map(SomeProtectedClass1::getSomeValue).collect(Collectors.toList()), adminAccessClass1);
 
-        Authenticator.getInstance().setUserId(1);
-        ListRows = session.createQuery("FROM SomeProtectedClass2 ").list();
-        System.out.println("OUT SRAJ");
-        System.out.println(ListRows);
+        Authenticator.getInstance().setUserId(4); // ksiegowy id spadło z rowerka
+        listRows = session.createQuery("FROM SomeProtectedClass1 ").list();
+        List<String> ksiegowyAccessClass1 = Arrays.asList("wazne dane11", "wazne dane12");
+        Assertions.assertEquals(listRows.stream().map(SomeProtectedClass1::getSomeValue).collect(Collectors.toList()), ksiegowyAccessClass1);
 
-        System.out.println("PFFF" + session.createQuery("FROM Role ").list());
+        Authenticator.getInstance().setUserId(10); // hacker
+        listRows = session.createQuery("FROM SomeProtectedClass1 ").list();
+        List<String> hackerAccessClass1 = Arrays.asList("wazne dane12");
+        Assertions.assertEquals(listRows.stream().map(SomeProtectedClass1::getSomeValue).collect(Collectors.toList()), hackerAccessClass1);
 
-        Authenticator.getInstance().setUserId(4);
-        ListRows = session.createQuery("FROM SomeProtectedClass1 ").list();
-        System.out.println("OUT SRAJ");
-        System.out.println(ListRows);
+        Authenticator.getInstance().setUserId(10); // hacker
+        listRows = session.createQuery("FROM SomeProtectedClass2 ").list();
+        Assertions.assertEquals(listRows.size(), 0);
+    }
+
+    @Test
+    public void safelyInsertTest() {
+        Authenticator.getInstance().setUserId(10); // hacker
+
+        Transaction tx = session.beginTransaction();
+        SomeProtectedClass1 hackerInsertSomeProtectedClass1 = new SomeProtectedClass1("hacker", "hacker", (long) 3);
+        this.session.save(hackerInsertSomeProtectedClass1);
+        Transaction finalTx = tx;
+        assertDoesNotThrow(() -> finalTx.commit());
+
+        tx = session.beginTransaction();
+        SomeProtectedClass2 hackerInsertSomeProtectedClass2 = new SomeProtectedClass2("hacker", "hacker", (long) 3);
+        this.session.save(hackerInsertSomeProtectedClass2);
+        Transaction finalTx2 = tx;
+        Assertions.assertThrows(RuntimeException.class, () -> finalTx2.commit());
+    }
+
+    @Test
+    public void safelyUpdateTest() {
+        // TOSOLVE
+//        Authenticator.getInstance().setUserId(10); // hacker
+//        Transaction tx = session.beginTransaction();
+//
+//        someProtectedClass12.setSomeValue("better hacker");
+//        this.session.update(someProtectedClass12);
+//        Transaction finalTx = tx;
+//        assertDoesNotThrow(() -> finalTx.commit());
+    }
+
+    @Test
+    public void safelyDeleteTest() {
+        // TODO
     }
 
 
     @Test
     public void initializationModuleIntegrationTest() throws Exception {
-
         //then
         List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();
         List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").list();
@@ -117,9 +162,9 @@ public class InitializationModuleIntegrationTests {
 
         assertEquals(usersRoles.size(), 4);
         assertEquals(usersRoles.get(0), new UsersRole(1, new Role("admin")));
-        assertEquals(usersRoles.get(1), new UsersRole(2, new Role("ksiegowy")));
-        assertEquals(usersRoles.get(2), new UsersRole(3, new Role("tester")));
-        assertEquals(usersRoles.get(3), new UsersRole(4, new Role("hacker")));
+        assertEquals(usersRoles.get(1), new UsersRole(4, new Role("ksiegowy")));
+        assertEquals(usersRoles.get(2), new UsersRole(7, new Role("tester")));
+        assertEquals(usersRoles.get(3), new UsersRole(10, new Role("hacker")));
 
         assertEquals(hibernateSelects.size(), 2);
         assertEquals(hibernateSelects.get(0), new HibernateSelect("someprotec0_", "SomeProtectedClass1"));
@@ -146,9 +191,9 @@ public class InitializationModuleIntegrationTests {
         assertEquals(ksiegowyDefs.get(1).isCanDelete(), false);
 
         assertEquals(hackerDefs.get(0).getTableName(), "SomeProtectedClass1");
-        assertEquals(hackerDefs.get(0).isCanUpdate(), false);
-        assertEquals(hackerDefs.get(0).isCanRead(), false);
-        assertEquals(hackerDefs.get(0).isCanDelete(), false);
+        assertEquals(hackerDefs.get(0).isCanUpdate(), true);
+        assertEquals(hackerDefs.get(0).isCanRead(), true);
+        assertEquals(hackerDefs.get(0).isCanDelete(), true);
 
         assertEquals(hackerDefs.get(1).getTableName(), "SomeProtectedClass2");
         assertEquals(hackerDefs.get(1).isCanUpdate(), false);

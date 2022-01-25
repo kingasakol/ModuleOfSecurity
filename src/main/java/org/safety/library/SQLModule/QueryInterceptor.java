@@ -21,13 +21,15 @@ import java.util.List;
 public class QueryInterceptor extends EmptyInterceptor {
 
     private final DatabaseWrappers databaseWrappers = new DatabaseWrappers();
-    List<String> goTrough = new LinkedList<>(Arrays.asList(
+    private List<String> protectedTables = new LinkedList<>();
+    private final List<String> goTrough = new LinkedList<>(Arrays.asList(
             "HibernateSelect".toLowerCase(),
             "AccessList".toLowerCase(),
             "Default_Privilige".toLowerCase(),
             "Role_default_privilige".toLowerCase(),
             "Role".toLowerCase(),
-            "UsersRole".toLowerCase()
+            "UsersRole".toLowerCase(),
+            "AddPrivilege".toLowerCase()
     ));
     private long magickId;
 
@@ -44,48 +46,45 @@ public class QueryInterceptor extends EmptyInterceptor {
     @Override
     public String onPrepareStatement(String sql) {
         String tableName = QueryProcessor.getUsedTable(sql).toLowerCase();
-        System.out.println(sql + " SRAJ "  +tableName);
         if (goTrough.contains(tableName)) {
             return super.onPrepareStatement(sql);
         }
 
-        List<String> protectedTables = getProtectedTables();
+        protectedTables = getProtectedTables();
+
         if (!protectedTables.contains(tableName)) {
-            System.out.println("NIE SRAJ + " + protectedTables);
             return super.onPrepareStatement(sql);
         }
 
         QueryType type = QueryProcessor.getQueryType(sql);
         RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName);
-        try {
-            switch (type) {
-                case SELECT -> {
-                    System.out.println("SELECT SRAJ");
-                    QueryMaster master = new QueryMaster();
-                    System.out.println(privilegesMap);
-                    System.out.println(master.buildQuery(sql, privilegesMap));
+
+        switch (type) {
+            case SELECT -> {
+                QueryMaster master = new QueryMaster();
+                try {
                     return master.buildQuery(sql, privilegesMap);
-                }
-                case INSERT -> {
-                    if (!privilegesMap.canCreate()) {
-                        throw new AccessDeniedException("Insert Denied");
-                    }
-                }
-                case UPDATE -> {
-                    AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
-                    if (!accessListRow.isCanUpdate()) {
-                        throw new AccessDeniedException("Update Denied");
-                    }
-                }
-                case DELETE -> {
-                    AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
-                    if (!accessListRow.isCanDelete()) {
-                        throw new AccessDeniedException("Delete Denied");
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+            case INSERT -> {
+                if (!privilegesMap.canCreate()) {
+                    throw new RuntimeException("Insert Denied");
+                }
+            }
+            case UPDATE -> {
+                AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
+                if (!accessListRow.isCanUpdate()) {
+                    throw new RuntimeException("Update Denied");
+                }
+            }
+            case DELETE -> {
+                AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
+                if (!accessListRow.isCanDelete()) {
+                    throw new RuntimeException("Delete Denied");
+                }
+            }
         }
         return super.onPrepareStatement(sql);
     }
@@ -115,8 +114,8 @@ public class QueryInterceptor extends EmptyInterceptor {
     @Override
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
         // just like "onUpdate" S H O U L D W O R K
-        System.out.println("Interceptor onUpdate");
-        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
+//        System.out.println("Interceptor onUpdate");
+//        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
         magickId = (long) id;
         return true;
     }

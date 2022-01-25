@@ -40,7 +40,7 @@ public class RolesPrivilegesMap {
     private void instantiateCanCrate(String tableName) {
         List<AddPrivilege> addPrivilegeList = databaseWrappers.getAddPrivilege(this.concreteRole);
         for (AddPrivilege addPrivilege : addPrivilegeList) {
-            if(addPrivilege.getTableName().equals(tableName)) {
+            if(addPrivilege.getTableName().equalsIgnoreCase(tableName)) {
                 this.canCreate = true;
                 return;
             }
@@ -61,7 +61,7 @@ public class RolesPrivilegesMap {
     public AccessListRow getRowPrivilegesById(Long id) {
         Stream<AccessListRow> filteredListRowStream = this.filteredList.stream();
         List<AccessListRow> filteredList = filteredListRowStream
-                .filter(accessListRow -> (accessListRow.getId() == id)).toList();
+                .filter(accessListRow -> (accessListRow.getProtectedDataId() == id)).toList();
 
         if(filteredList.size() != 1){
             throw new IllegalArgumentException();

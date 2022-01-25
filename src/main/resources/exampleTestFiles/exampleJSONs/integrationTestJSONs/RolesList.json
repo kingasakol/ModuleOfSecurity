@@ -57,9 +57,9 @@
       "privilages" : [
         {
           "entityName": "SomeProtectedClass1",
-          "canRead": "false",
-          "canUpdate": "false",
-          "canDelete": "false"
+          "canRead": "true",
+          "canUpdate": "true",
+          "canDelete": "true"
         },
         {
           "entityName": "SomeProtectedClass2",

@@ -42,6 +42,8 @@ public class DatabaseWrappers {
     public List<AddPrivilege> getAddPrivilege(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
+        System.out.println("Kurwa" + session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list());
+
         return session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
     }
 }
