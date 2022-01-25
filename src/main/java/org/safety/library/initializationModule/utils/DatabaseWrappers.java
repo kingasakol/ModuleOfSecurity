@@ -16,7 +16,7 @@ public class DatabaseWrappers {
     public Map<String, Role> getRolesByItsNames(){
         Session session = SessionProvider.getSession();
         Map<String, Role> result = new HashMap<>();
-        List<Role> queriedRoles = session.createQuery("FROM Role R").getResultList();
+        List<Role> queriedRoles = session.createQuery("FROM Role R").list();
         queriedRoles.forEach(role -> {
             result.put(role.getName(), role);
         });
@@ -25,10 +25,10 @@ public class DatabaseWrappers {
 
     public Role getRoleByUserID(Long userId) throws RoleForUserNotFoundException {
         Session session = SessionProvider.getSession();
-        List<Role> roles = session.createQuery("FROM UsersRole U WHERE U.userId = "+Long.toString(userId)).list();
+        List<Role> roles = session.createQuery("FROM Role R WHERE R.id = "+Long.toString(userId)).list();
 
         if(roles.size() != 1){
-            throw new RoleForUserNotFoundException("There is no Role associated with this userId in a database");
+            throw new RoleForUserNotFoundException("There are < " + roles.size() + " > associated with this userId in a database");
         }
         return roles.get(0);
     }
@@ -36,18 +36,14 @@ public class DatabaseWrappers {
     public List<AccessListRow> getAccessForRole(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
-        List<AccessListRow> accessListRow = session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
-
-        session.close();
-        return accessListRow;
+        return session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
     }
 
     public List<AddPrivilege> getAddPrivilege(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSession();
-        List<AddPrivilege> addPrivilege = session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
+        System.out.println("Kurwa" + session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list());
 
-        session.close();
-        return addPrivilege;
+        return session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
     }
 }

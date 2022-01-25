@@ -45,4 +45,13 @@ public class SomeProtectedClass2 {
     }
 
     public SomeProtectedClass2() {}
+
+    @Override
+    public String toString() {
+        return "SomeProtectedClass2{" +
+                "id=" + id +
+                ", someValue='" + someValue + '\'' +
+                ", someOtherValue='" + someOtherValue + '\'' +
+                '}';
+    }
 }

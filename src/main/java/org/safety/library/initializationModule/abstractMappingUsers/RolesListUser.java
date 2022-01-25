@@ -7,7 +7,6 @@ import org.safety.library.initializationModule.JSONMappingUser;
 import org.safety.library.initializationModule.abstractMappingObjects.RolesList;
 import org.safety.library.models.Role;
 
-import java.util.List;
 
 
 public class RolesListUser implements JSONMappingUser {

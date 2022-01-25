@@ -59,4 +59,13 @@ public class AddPrivilege {
     public int hashCode() {
         return Objects.hash(role, tableName);
     }
+
+    @Override
+    public String toString() {
+        return "AddPrivilege{" +
+                "id=" + id +
+                ", role=" + role +
+                ", tableName='" + tableName + '\'' +
+                '}';
+    }
 }
