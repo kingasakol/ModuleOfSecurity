@@ -10,6 +10,7 @@ public class SessionProvider {
     private static SessionFactory sessionFactory = null;
     private static EmptyInterceptor interceptor = new QueryInterceptor();
     private static Session session;
+    private static Session sessionWithoutInterceptor;
 
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
@@ -25,5 +26,12 @@ public class SessionProvider {
             session = getSessionFactory().withOptions().interceptor(interceptor).openSession();
         }
         return session;
+    }
+
+    public static Session getSessionWithoutInterceptor() {
+        if(sessionWithoutInterceptor == null || !sessionWithoutInterceptor.isOpen()){
+            sessionWithoutInterceptor = getSessionFactory().withOptions().openSession();
+        }
+        return sessionWithoutInterceptor;
     }
 }

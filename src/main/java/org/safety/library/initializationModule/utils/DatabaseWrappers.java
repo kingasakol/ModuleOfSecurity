@@ -14,7 +14,7 @@ import java.util.Map;
 public class DatabaseWrappers {
 
     public Map<String, Role> getRolesByItsNames(){
-        Session session = SessionProvider.getSession();
+        Session session = SessionProvider.getSessionWithoutInterceptor();
         Map<String, Role> result = new HashMap<>();
         List<Role> queriedRoles = session.createQuery("FROM Role R").list();
         queriedRoles.forEach(role -> {
@@ -24,7 +24,7 @@ public class DatabaseWrappers {
     }
 
     public Role getRoleByUserID(Long userId) throws RoleForUserNotFoundException {
-        Session session = SessionProvider.getSession();
+        Session session = SessionProvider.getSessionWithoutInterceptor();
         List<Role> roles = session.createQuery("FROM Role R WHERE R.id = "+Long.toString(userId)).list();
 
         if(roles.size() != 1){
@@ -35,14 +35,13 @@ public class DatabaseWrappers {
 
     public List<AccessListRow> getAccessForRole(Role role) {
         Long id = role.getId();
-        Session session = SessionProvider.getSession();
+        Session session = SessionProvider.getSessionWithoutInterceptor();
         return session.createQuery("FROM AccessListRow AC WHERE AC.role.id = " + Long.toString(id)).list();
     }
 
     public List<AddPrivilege> getAddPrivilege(Role role) {
         Long id = role.getId();
-        Session session = SessionProvider.getSession();
-        System.out.println("Kurwa" + session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list());
+        Session session = SessionProvider.getSessionWithoutInterceptor();
 
         return session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
     }
