@@ -1,10 +1,8 @@
 package initializationModule.integrationTests;
 
-import net.bytebuddy.pool.TypePool;
 import org.hibernate.Transaction;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.safety.library.initializationModule.Initializer;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass1;
 import org.hibernate.Session;
@@ -16,7 +14,6 @@ import org.safety.library.initializationModule.utils.Authenticator;
 import org.safety.library.models.*;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +31,8 @@ public class InitializationModuleIntegrationTests {
     SomeProtectedClass2 someProtectedClass21;
     SomeProtectedClass2 someProtectedClass22;
 
-    @BeforeEach
+
+    @BeforeAll
     public void prepareForIntegrationTest() throws Exception {
         session.beginTransaction();
         session.createQuery("DELETE FROM TestUsers ").executeUpdate();
@@ -142,6 +140,10 @@ public class InitializationModuleIntegrationTests {
     @Test
     public void safelyUpdateTest() {
         // TOSOLVE
+        if(someProtectedClass12 == null){
+            someProtectedClass12 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+2).getResultList().get(0);
+        }
+
         Authenticator.getInstance().setUserId(10); // hacker
         Transaction tx = session.beginTransaction();
 
@@ -209,6 +211,19 @@ public class InitializationModuleIntegrationTests {
 
     @Test
     public void initializationModuleIntegrationTest() throws Exception {
+        if(someProtectedClass11 == null){
+            someProtectedClass11 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+1).getResultList().get(0);
+        }
+        if(someProtectedClass12 == null){
+            someProtectedClass12 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+2).getResultList().get(0);
+        }
+        if(someProtectedClass21 == null){
+            someProtectedClass21 = (SomeProtectedClass2) session.createQuery("FROM SomeProtectedClass2 S WHERE S.id = "+1).getResultList().get(0);
+        }
+        if(someProtectedClass22 == null){
+            someProtectedClass22 = (SomeProtectedClass2) session.createQuery("FROM SomeProtectedClass2 S WHERE S.id = "+2).getResultList().get(0);
+        }
+
         //then
         List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();
         List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").list();
