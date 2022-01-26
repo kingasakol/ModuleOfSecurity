@@ -6,6 +6,7 @@ import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundExc
 import org.safety.library.models.AccessListRow;
 import org.safety.library.models.AddPrivilege;
 import org.safety.library.models.Role;
+import org.safety.library.models.UsersRole;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,12 +26,12 @@ public class DatabaseWrappers {
 
     public Role getRoleByUserID(Long userId) throws RoleForUserNotFoundException {
         Session session = SessionProvider.getSessionWithoutInterceptor();
-        List<Role> roles = session.createQuery("FROM Role R WHERE R.id = "+Long.toString(userId)).list();
+        List<UsersRole> usersRoles = session.createQuery("FROM UsersRole R WHERE R.userId = "+Long.toString(userId)).list();
 
-        if(roles.size() != 1){
-            throw new RoleForUserNotFoundException("There are < " + roles.size() + " > associated with this userId in a database");
+        if(usersRoles.size() != 1){
+            throw new RoleForUserNotFoundException("There are < " + usersRoles.size() + " > associated with this userId in a database");
         }
-        return roles.get(0);
+        return usersRoles.get(0).getRole();
     }
 
     public List<AccessListRow> getAccessForRole(Role role) {
