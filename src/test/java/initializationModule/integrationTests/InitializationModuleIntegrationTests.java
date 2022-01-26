@@ -1,5 +1,6 @@
 package initializationModule.integrationTests;
 
+import net.bytebuddy.pool.TypePool;
 import org.hibernate.Transaction;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -109,6 +110,36 @@ public class InitializationModuleIntegrationTests {
     }
 
     @Test
+    public void updateACLAfterInsertTest() {
+        Authenticator.getInstance().setUserId(10);
+        Transaction tx = session.beginTransaction();
+        SomeProtectedClass1 hackerInsertSomeProtectedClass1 = new SomeProtectedClass1("hacker", "hacker", (long) 3);
+        this.session.save(hackerInsertSomeProtectedClass1);
+        Transaction finalTx = tx;
+        tx.commit();
+
+        List<AccessListRow> list = session.createQuery("FROM AccessListRow ").list();
+
+        Assertions.assertEquals(list.get(16).getTableName(), "SomeProtectedClass1".toLowerCase());
+        Assertions.assertEquals(list.get(17).getTableName(), "SomeProtectedClass1".toLowerCase());
+        Assertions.assertEquals(list.get(18).getTableName(), "SomeProtectedClass1".toLowerCase());
+        Assertions.assertEquals(list.get(19).getTableName(), "SomeProtectedClass1".toLowerCase());
+
+        Assertions.assertEquals(list.get(16).getProtectedDataId(), 3);
+        Assertions.assertEquals(list.get(17).getProtectedDataId(), 3);
+        Assertions.assertEquals(list.get(18).getProtectedDataId(), 3);
+        Assertions.assertEquals(list.get(19).getProtectedDataId(), 3);
+
+        Assertions.assertEquals(list.get(16).getRole().getDefaultPriviliges().get(0).getRole().getName(), "admin");
+        Assertions.assertEquals(list.get(17).getRole().getDefaultPriviliges().get(0).getRole().getName(), "ksiegowy");
+        Assertions.assertEquals(list.get(18).getRole().getDefaultPriviliges().get(0).getRole().getName(), "tester");
+        Assertions.assertEquals(list.get(19).getRole().getDefaultPriviliges().get(0).getRole().getName(), "hacker");
+
+
+        Assertions.assertEquals(list.size(), 20);
+    }
+
+    @Test
     public void safelyUpdateTest() {
         // TOSOLVE
         Authenticator.getInstance().setUserId(10); // hacker
@@ -130,7 +161,49 @@ public class InitializationModuleIntegrationTests {
 
     @Test
     public void safelyDeleteTest() {
-        // TODO
+        Authenticator.getInstance().setUserId(10); // ksiegowy
+        Transaction tx = session.beginTransaction();
+
+        List<SomeProtectedClass1> listOfSomeProtectedClass = session.createQuery("FROM SomeProtectedClass1 ").list();
+        SomeProtectedClass1 someProtectedClass1 = listOfSomeProtectedClass.get(0);
+        session.delete(someProtectedClass1);
+
+        Transaction finalTx = tx;
+        assertDoesNotThrow(() -> finalTx.commit());
+
+        tx = session.beginTransaction();
+        Authenticator.getInstance().setUserId(4); // ksiegowy
+
+        List<SomeProtectedClass2> listOfSomeProtectedClass2 = session.createQuery("FROM SomeProtectedClass2 ").list();
+        SomeProtectedClass2 someProtectedClass2 = listOfSomeProtectedClass2.get(0);
+        session.delete(someProtectedClass2);
+        Transaction finalTx1 = tx;
+        Assertions.assertThrows(RuntimeException.class, () -> finalTx1.commit());
+
+    }
+
+    @Test
+    public void updateACLAfterDeleteTest() {
+        Authenticator.getInstance().setUserId(10); // ksiegowy
+        Transaction tx = session.beginTransaction();
+
+        List<SomeProtectedClass1> listOfSomeProtectedClass = session.createQuery("FROM SomeProtectedClass1 ").list();
+        SomeProtectedClass1 someProtectedClass1 = listOfSomeProtectedClass.get(0);
+        session.delete(someProtectedClass1);
+
+        Transaction finalTx = tx;
+        finalTx.commit();
+
+
+        tx = session.beginTransaction();
+        List<AccessListRow> list = session.createQuery("FROM AccessListRow ").list();
+        list.forEach(accessListRow -> {
+            System.out.println(accessListRow.getId() + " " + accessListRow.getProtectedDataId());
+            Assertions.assertFalse(accessListRow.getProtectedDataId() == someProtectedClass1.getId() && accessListRow.getTableName().equalsIgnoreCase("SomeProtectedClass1"));
+        });
+
+        Assertions.assertEquals(list.size(), 12);
+
     }
 
 

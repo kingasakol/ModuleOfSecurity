@@ -32,6 +32,7 @@ public class QueryInterceptor extends EmptyInterceptor {
             "AddPrivilege".toLowerCase()
     ));
     private static long magickId;
+    private int idForInsert;
 
 
     private List<String> getProtectedTables() {
@@ -72,7 +73,7 @@ public class QueryInterceptor extends EmptyInterceptor {
                 if (!privilegesMap.canCreate()) {
                     throw new RuntimeException("Insert Denied");
                 }
-                UpdateACL.updateAfterInsert(tableName, magickId);
+                UpdateACL.updateAfterInsert(tableName, idForInsert);
             }
             case UPDATE -> {
                 AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
@@ -100,7 +101,7 @@ public class QueryInterceptor extends EmptyInterceptor {
         //TODO
 //        System.out.println("Interceptor onSave");
 //        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
-        magickId = (long) id;
+        idForInsert = Integer.parseInt(id.toString());
         return super.onSave(entity, id, state, propertyNames, types);
     }
 
