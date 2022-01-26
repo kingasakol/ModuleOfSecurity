@@ -26,6 +26,7 @@ public class DataAccessCreator {
             List<List<String>> factoryResult = mapping.getMappedData();
             className = factoryResult.get(0).get(0);
             for(int index = 1; index < factoryResult.size(); index++){
+
                 int id = Integer.parseInt(factoryResult.get(index).get(0));
                 for(int innerIndex = 1; innerIndex < factoryResult.get(index).size(); innerIndex += 4){
                     String roleName = factoryResult.get(index).get(innerIndex);

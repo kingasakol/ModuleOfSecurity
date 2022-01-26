@@ -75,4 +75,15 @@ public class DefaultPrivilige {
     public long getId() {
         return Id;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultPrivilige{" +
+                "role=" + role.getName() +
+                ", tableName='" + tableName +
+                ", canRead=" + canRead +
+                ", canUpdate=" + canUpdate +
+                ", canDelete=" + canDelete +
+                '}';
+    }
 }

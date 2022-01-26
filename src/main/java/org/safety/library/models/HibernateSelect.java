@@ -38,7 +38,8 @@ public class HibernateSelect {
         this.entityName = entityName;
     }
 
-    public HibernateSelect() {}
+    public HibernateSelect() {
+    }
 
     @Override
     public boolean equals(Object o) {

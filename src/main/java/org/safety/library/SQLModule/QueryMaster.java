@@ -2,14 +2,21 @@ package org.safety.library.SQLModule;
 
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 
-public class QueryMaster {
-    private String sql;
+import java.util.List;
 
-    public QueryMaster(String sql){
-        this.sql = sql;
+public class QueryMaster {
+    private final Builder queryBuilder;
+
+    public QueryMaster(){
+        queryBuilder = new DerbyQueryBuilder();
     }
 
-    public String buildQuery(RolesPrivilegesMap rolesPrivilegesMap, Builder builder) throws Exception {
-        return builder.returnPreparedSQL(rolesPrivilegesMap.getPrivileges(), this.sql);
+    public String buildQuery(String sql, RolesPrivilegesMap rolesPrivilegesMap) throws Exception {
+        String safeSql = queryBuilder.returnPreparedSQL(rolesPrivilegesMap.getFilteredList(), sql);
+        List<String> splitSafeSql = List.of(safeSql.split(" "));
+        if(splitSafeSql.get(splitSafeSql.size() - 1).equalsIgnoreCase("where")){
+            safeSql = safeSql + " 0 = 1 ";
+        }
+        return safeSql;
     }
 }
