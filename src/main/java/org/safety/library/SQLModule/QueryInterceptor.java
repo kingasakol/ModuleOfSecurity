@@ -95,9 +95,6 @@ public class QueryInterceptor extends EmptyInterceptor {
     // needed id (second argument) and entity.getClass().getSimpleName() for UpdateACLCLass
     @Override
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-        //TODO
-//        System.out.println("Interceptor onSave");
-//        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
         return super.onSave(entity, id, state, propertyNames, types);
     }
 
@@ -105,17 +102,12 @@ public class QueryInterceptor extends EmptyInterceptor {
     // needed id (second argument) and entity.getClass().getSimpleName() for UpdateACLCLass
     @Override
     public void onDelete(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-//        System.out.println("Interceptor onDelete");
-//        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
         magickId = (long) id;
         super.onDelete(entity, id, state, propertyNames, types);
     }
 
     @Override
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
-        // just like "onUpdate" S H O U L D W O R K
-//        System.out.println("Interceptor onUpdate");
-//        System.out.println(entity.toString() + ' ' + id + ' ' + entity.getClass().getSimpleName());
         magickId = (long) id;
         return false;
     }
