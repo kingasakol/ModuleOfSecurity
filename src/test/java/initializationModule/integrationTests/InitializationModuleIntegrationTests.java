@@ -2,12 +2,10 @@ package initializationModule.integrationTests;
 
 import org.hibernate.Transaction;
 import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.safety.library.initializationModule.Initializer;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass1;
 import org.hibernate.Session;
-import org.junit.jupiter.api.Test;
 import org.safety.library.hibernate.SessionProvider;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass2;
 import org.safety.library.initializationModule.testEntities.TestUsers;
@@ -25,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 @Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class InitializationModuleIntegrationTests {
 
     Session session = SessionProvider.getSession();
@@ -33,12 +32,10 @@ public class InitializationModuleIntegrationTests {
     SomeProtectedClass2 someProtectedClass21;
     SomeProtectedClass2 someProtectedClass22;
 
-    @BeforeEach
+
+    @BeforeAll
     public void prepareForIntegrationTest() throws Exception {
         session.beginTransaction();
-        session.createQuery("DELETE FROM TestUsers ").executeUpdate();
-        session.createQuery("DELETE FROM SomeProtectedClass1 ").executeUpdate();
-        session.createQuery("DELETE FROM SomeProtectedClass2 ").executeUpdate();
         session.getTransaction().commit();
         session.beginTransaction();
         TestUsers testUser1 = new TestUsers((long) 1, "Janek Admin");
@@ -111,6 +108,10 @@ public class InitializationModuleIntegrationTests {
     @Test
     public void safelyUpdateTest() {
         // TOSOLVE
+        if(someProtectedClass12 == null){
+            someProtectedClass12 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+2).getResultList().get(0);
+        }
+
         Authenticator.getInstance().setUserId(10); // hacker
         Transaction tx = session.beginTransaction();
 
@@ -136,6 +137,19 @@ public class InitializationModuleIntegrationTests {
 
     @Test
     public void initializationModuleIntegrationTest() throws Exception {
+        if(someProtectedClass11 == null){
+            someProtectedClass11 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+1).getResultList().get(0);
+        }
+        if(someProtectedClass12 == null){
+            someProtectedClass12 = (SomeProtectedClass1) session.createQuery("FROM SomeProtectedClass1 S WHERE S.id = "+2).getResultList().get(0);
+        }
+        if(someProtectedClass21 == null){
+            someProtectedClass21 = (SomeProtectedClass2) session.createQuery("FROM SomeProtectedClass2 S WHERE S.id = "+1).getResultList().get(0);
+        }
+        if(someProtectedClass22 == null){
+            someProtectedClass22 = (SomeProtectedClass2) session.createQuery("FROM SomeProtectedClass2 S WHERE S.id = "+2).getResultList().get(0);
+        }
+
         //then
         List<AccessListRow> accessListRows = session.createQuery("FROM AccessListRow ").list();
         List<AddPrivilege> addPrivileges = session.createQuery("FROM AddPrivilege ").list();
