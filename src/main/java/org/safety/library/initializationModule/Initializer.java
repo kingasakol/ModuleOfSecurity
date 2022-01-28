@@ -1,10 +1,9 @@
 package org.safety.library.initializationModule;
 
-import org.hibernate.Session;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.safety.library.annotations.ProtectedData;
-import org.safety.library.annotations.Users;
-import org.safety.library.hibernate.SessionProvider;
-import org.safety.library.initializationModule.Exceptions.ClassWithAnnotationDidntFound;
 import org.safety.library.initializationModule.abstractMappingUsers.DataAccessUser;
 import org.safety.library.initializationModule.abstractMappingUsers.EntityAccessUser;
 import org.safety.library.initializationModule.abstractMappingUsers.RolesForUsersUser;
@@ -19,15 +18,14 @@ import org.safety.library.initializationModule.mappingFactories.RolesForUsersJSO
 import org.safety.library.initializationModule.mappingFactories.RolesListJSONMapping;
 import org.safety.library.initializationModule.utils.ClassFinder;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
-import org.safety.library.models.Role;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Initializer {
     private RolesListUser rolesListUser;
@@ -36,41 +34,40 @@ public class Initializer {
     private EntityAccessUser entityAccessUser;
     private ClassFinder classFinder;
 
-    public Initializer(){
+    private Map<String, String> usersJsonPaths = new HashMap<>();
+
+    public Initializer() throws URISyntaxException, IOException, ParseException {
         classFinder = new ClassFinder();
+        initializeJsonPaths();
     }
 
-    private Users getUsersAnnotation() throws ClassWithAnnotationDidntFound, IOException, URISyntaxException, ClassNotFoundException {
-        List<Class> allClasses = classFinder.getAllClasses();
-        List<Annotation> usersAnnotations = new LinkedList<>();
-        allClasses.forEach(clazz -> {
-            Arrays.stream(clazz.getAnnotations()).toList().forEach(annotation -> {
-                if(annotation instanceof Users){
-                    usersAnnotations.add(annotation);
-                }
-            });
-        });
-        if(usersAnnotations.size() != 1){
-            throw new ClassWithAnnotationDidntFound("Didn't found any class annotated by Annotation @Users. To use safety library" +
-                    " you must annotate Hibernate entity, that represents Users entity with annotation" +
-                    " @Users.");
+    private void initializeJsonPaths() throws URISyntaxException, IOException, ParseException {
+        JSONParser jsonParser = new JSONParser();
+        try(FileReader reader = new FileReader(Paths.get(ClassLoader.getSystemResource("safety_library.json").toURI()).toString())){
+            JSONObject obj = (JSONObject) jsonParser.parse(reader);
+            String rolesListPath = (String) obj.get("path_to_the_rolesList");
+            String rolesForUsersPath = (String) obj.get("path_to_the_rolesForUsers");
+            String entityAccessPath = (String) obj.get("path_to_the_entityAccess");
+            usersJsonPaths.put("rolesListPath", rolesListPath);
+            usersJsonPaths.put("rolesForUsersPath", rolesForUsersPath);
+            usersJsonPaths.put("entityAccessPath", entityAccessPath);
+
         }
-        return ((Users)usersAnnotations.get(0));
     }
 
-    private String getRolesPathFromAnnotation() throws ClassWithAnnotationDidntFound, IOException, URISyntaxException, ClassNotFoundException {
-        return Paths.get(ClassLoader.getSystemResource( this.getUsersAnnotation().rolesListJsonPath()).toURI()).toString();
+    private String getRolesPath() throws  URISyntaxException {
+        return Paths.get(ClassLoader.getSystemResource( this.usersJsonPaths.get("rolesListPath")).toURI()).toString();
     }
 
-    private String getEntityAccessPathFromAnnotation() throws ClassWithAnnotationDidntFound, IOException, URISyntaxException, ClassNotFoundException {
-        return Paths.get(ClassLoader.getSystemResource( this.getUsersAnnotation().entityAccessJsonPath()).toURI()).toString();
+    private String getEntityAccessPath() throws URISyntaxException {
+        return Paths.get(ClassLoader.getSystemResource( this.usersJsonPaths.get("entityAccessPath")).toURI()).toString();
     }
 
-    private String getRolesForUsersPathFromAnnotation() throws ClassWithAnnotationDidntFound, IOException, URISyntaxException, ClassNotFoundException {
-        return Paths.get(ClassLoader.getSystemResource( this.getUsersAnnotation().rolesForUsersJsonPath()).toURI()).toString();
+    private String getRolesForUsersPath() throws  URISyntaxException {
+        return Paths.get(ClassLoader.getSystemResource( this.usersJsonPaths.get("rolesForUsersPath")).toURI()).toString();
     }
 
-    private String[] getDataAccessJsonsPathsFromAnnotations() throws IOException, URISyntaxException, ClassNotFoundException {
+    private String[] getDataAccessJsonsPaths() throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class> allClasses = classFinder.getAllClasses();
         List<Annotation> protectedDataAnnotations = new LinkedList<>();
         allClasses.forEach(clazz -> {
@@ -95,7 +92,7 @@ public class Initializer {
         return rolesForUsersUser;
     }
 
-    private DataAccessUser initializeDataAccessUser(String[] jsonPaths) throws Exception {
+    private DataAccessUser initializeDataAccessUser(String[] jsonPaths) {
         DataAccessUser dataAccessUser = new DataAccessUser(
                 Arrays.stream(jsonPaths).map(jsonPath -> {
                     try {
@@ -114,16 +111,16 @@ public class Initializer {
     }
 
     public void initialize() throws Exception {
-        rolesListUser = initializeRolesListUser(this.getRolesPathFromAnnotation());
+        rolesListUser = initializeRolesListUser(this.getRolesPath());
         rolesListUser.use();
 
-        rolesForUsersUser = initializeRolesForUsersUser(this.getRolesForUsersPathFromAnnotation());
+        rolesForUsersUser = initializeRolesForUsersUser(this.getRolesForUsersPath());
         rolesForUsersUser.use();
 
-        dataAccessUser = initializeDataAccessUser(this.getDataAccessJsonsPathsFromAnnotations());
+        dataAccessUser = initializeDataAccessUser(this.getDataAccessJsonsPaths());
         dataAccessUser.use();
 
-        entityAccessUser = initializeEntityAccessUser(this.getEntityAccessPathFromAnnotation());
+        entityAccessUser = initializeEntityAccessUser(this.getEntityAccessPath());
         entityAccessUser.use();
     }
 

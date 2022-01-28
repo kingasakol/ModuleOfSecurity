@@ -3,6 +3,7 @@ package initializationModule.integrationTests;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 import org.safety.library.initializationModule.Initializer;
 import org.safety.library.initializationModule.testEntities.SomeProtectedClass1;
 import org.hibernate.Session;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 
 @Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class InitializationModuleIntegrationTests {
 
     Session session = SessionProvider.getSession();

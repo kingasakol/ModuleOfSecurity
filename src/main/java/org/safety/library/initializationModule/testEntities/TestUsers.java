@@ -1,12 +1,7 @@
 package org.safety.library.initializationModule.testEntities;
 
-import org.safety.library.annotations.Users;
-
 import javax.persistence.*;
 
-@Users(rolesListJsonPath = "exampleTestFiles/exampleJSONs/integrationTestJSONs/RolesList.json",
-        entityAccessJsonPath = "exampleTestFiles/exampleJSONs/integrationTestJSONs/EntityAccess.json",
-        rolesForUsersJsonPath = "exampleTestFiles/exampleJSONs/integrationTestJSONs/RolesForUsers.json")
 @Entity
 public class TestUsers {
     @Id
