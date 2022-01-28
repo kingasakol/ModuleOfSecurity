@@ -11,9 +11,11 @@ import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.models.AccessListRow;
 import org.safety.library.models.HibernateSelect;
 import org.safety.library.updateModule.UpdateACL;
+import org.safety.library.annotations.ACL;
 
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +46,27 @@ public class QueryInterceptor extends EmptyInterceptor {
                 .toList();
     }
 
+    private boolean isInvokedFromACLMethod() {
+        StackTraceElement[] traceElements = Thread.currentThread().getStackTrace();
+        for(StackTraceElement traceElement: traceElements){
+            try {
+                Class traceElementClass = Class.forName(traceElement.getClassName());
+                for(Method m: traceElementClass.getMethods()){
+                    if(m.getName().equals(traceElement.getMethodName()) && m.isAnnotationPresent(ACL.class)){
+                        return true;
+                    }
+                }
+            } catch (ClassNotFoundException e) {}
+        }
+        return false;
+    }
+
     @Override
     public String onPrepareStatement(String sql) {
+        if(!this.isInvokedFromACLMethod()){
+            return sql;
+        }
+
         String tableName = QueryProcessor.getUsedTable(sql).toLowerCase();
         if (goTrough.contains(tableName)) {
             return super.onPrepareStatement(sql);
