@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "entityName": "SomeProtectedClass1",
+      "allowedRoles": [
+        "ksiegowy", "admin", "hacker"
+      ]
+    },
+    {
+      "entityName": "SomeProtectedClass2",
+      "allowedRoles": [
+       "tester", "admin"
+      ]
+    }
+  ]
+}

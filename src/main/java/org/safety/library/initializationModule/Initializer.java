@@ -117,11 +117,11 @@ public class Initializer {
         rolesForUsersUser = initializeRolesForUsersUser(this.getRolesForUsersPath());
         rolesForUsersUser.use();
 
-        dataAccessUser = initializeDataAccessUser(this.getDataAccessJsonsPaths());
-        dataAccessUser.use();
+//        dataAccessUser = initializeDataAccessUser(this.getDataAccessJsonsPaths());
+//        dataAccessUser.use();
 
-        entityAccessUser = initializeEntityAccessUser(this.getEntityAccessPath());
-        entityAccessUser.use();
+//        entityAccessUser = initializeEntityAccessUser(this.getEntityAccessPath());
+//        entityAccessUser.use();
     }
 
 }

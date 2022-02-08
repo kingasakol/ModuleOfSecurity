@@ -1,0 +1,5 @@
+{
+  "path_to_the_rolesList": "exampleTestFiles/exampleJSONs/integrationTestJSONs/RolesList.json",
+  "path_to_the_rolesForUsers": "exampleTestFiles/exampleJSONs/integrationTestJSONs/RolesForUsers.json",
+  "path_to_the_entityAccess": "exampleTestFiles/exampleJSONs/integrationTestJSONs/EntityAccess.json"
+}
