@@ -1,5 +1,6 @@
 package org.safety.library.RolesPrivilegesMap;
 
+import org.safety.library.SQLModule.QueryType;
 import org.safety.library.initializationModule.Exceptions.RoleForUserNotFoundException;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.initializationModule.utils.PrivilegesReader;
@@ -20,12 +21,12 @@ public class RolesPrivilegesMap {
     private boolean canCreate;
 
 
-    public RolesPrivilegesMap(DatabaseWrappers databaseWrappers, String tableName) {
+    public RolesPrivilegesMap(DatabaseWrappers databaseWrappers, String tableName, QueryType type) {
         this.databaseWrappers = databaseWrappers;
         initConcreteRole();
         instantiateCanCreate(tableName);
         this.privileges = this.databaseWrappers.getAccessForRole(this.concreteRole);
-        this.filteredList = filterList(tableName);
+        this.filteredList = filterList(tableName, type);
     }
 
     private void initConcreteRole() {
@@ -48,9 +49,25 @@ public class RolesPrivilegesMap {
         this.canCreate = false;
     }
 
-    private List<AccessListRow> filterList(String tableName) {
+    private List<AccessListRow> filterList(String tableName, QueryType type) {
         Stream<AccessListRow> accessListRowStream = this.privileges.stream();
         System.out.println(this.concreteRole.getName());
+        switch(type) {
+            case UPDATE -> {
+                return accessListRowStream
+                        .filter(AccessListRow::isCanUpdate)
+                        .filter(accessListRow -> accessListRow.getTableName().equalsIgnoreCase(tableName))
+                        .filter(accessListRow -> accessListRow.getRole().getName().equals(this.concreteRole.getName()))
+                        .collect(Collectors.toList());
+            }
+            case DELETE -> {
+                return accessListRowStream
+                        .filter(AccessListRow::isCanDelete)
+                        .filter(accessListRow -> accessListRow.getTableName().equalsIgnoreCase(tableName))
+                        .filter(accessListRow -> accessListRow.getRole().getName().equals(this.concreteRole.getName()))
+                        .collect(Collectors.toList());
+            }
+        }
         return accessListRowStream
                 .filter(AccessListRow::isCanRead)
                 .filter(accessListRow -> accessListRow.getTableName().equalsIgnoreCase(tableName))

@@ -79,7 +79,7 @@ public class QueryInterceptor extends EmptyInterceptor {
         }
 
         QueryType type = QueryProcessor.getQueryType(sql);
-        RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName);
+        RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName, type);
 
         switch (type) {
             case SELECT -> {
