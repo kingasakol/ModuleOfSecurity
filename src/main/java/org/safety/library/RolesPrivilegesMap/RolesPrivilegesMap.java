@@ -80,8 +80,8 @@ public class RolesPrivilegesMap {
         List<AccessListRow> filteredList = filteredListRowStream
                 .filter(accessListRow -> (accessListRow.getProtectedDataId() == id)).toList();
 
-        if(filteredList.size() != 1){
-            throw new IllegalArgumentException();
+        if(filteredList.size() == 0){
+            return new AccessListRow(this.concreteRole,Math.toIntExact(id),null,false,false,false);
         }
         return filteredList.get(0);
     }

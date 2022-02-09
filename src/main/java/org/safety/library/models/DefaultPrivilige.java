@@ -12,7 +12,6 @@ public class DefaultPrivilige {
     private long Id;
 
     @ManyToOne
-    @JoinColumn(name="role_id", nullable = false)
     private Role role;
 
     private String tableName;
@@ -32,6 +31,8 @@ public class DefaultPrivilige {
     public DefaultPrivilige() {
     }
 
+    @ManyToOne
+    @JoinColumn(name="role_id", nullable = false)
     public Role getRole() {
         return role;
     }

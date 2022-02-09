@@ -14,6 +14,7 @@ public class Role {
     private String name;
 
     @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name="priviledge_role_id", nullable = false)
     private List<DefaultPrivilige> privs;
 
     public Role() {}
@@ -38,6 +39,7 @@ public class Role {
         this.privs = privs;
     }
 
+    @OneToMany(cascade = {CascadeType.ALL})
     public List<DefaultPrivilige> getDefaultPriviliges() {
         return privs;
     }

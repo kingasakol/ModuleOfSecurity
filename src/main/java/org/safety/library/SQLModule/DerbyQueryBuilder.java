@@ -29,7 +29,7 @@ public class DerbyQueryBuilder implements Builder {
         ClassFinder classFinder = new ClassFinder();
         List<Class> classes = classFinder.getAllClasses();
         for (Class clazz : classes) {
-            if (clazz.getSimpleName().equals(className)) {
+            if (clazz.getSimpleName().equalsIgnoreCase(className)) {
                 for (Field field : clazz.getDeclaredFields()) {
                     for (Annotation annotation : field.getAnnotations()) {
                         if (annotation instanceof Id) {

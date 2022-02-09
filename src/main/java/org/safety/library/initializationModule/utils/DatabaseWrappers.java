@@ -16,6 +16,7 @@ public class DatabaseWrappers {
 
     public Map<String, Role> getRolesByItsNames(){
         Session session = SessionProvider.getSessionWithoutInterceptor();
+        session.clear();
         Map<String, Role> result = new HashMap<>();
         List<Role> queriedRoles = session.createQuery("FROM Role R").list();
         queriedRoles.forEach(role -> {
@@ -26,6 +27,7 @@ public class DatabaseWrappers {
 
     public Role getRoleByUserID(Long userId) throws RoleForUserNotFoundException {
         Session session = SessionProvider.getSessionWithoutInterceptor();
+        session.clear();
         List<UsersRole> usersRoles = session.createQuery("FROM UsersRole R WHERE R.userId = "+Long.toString(userId)).list();
 
         if(usersRoles.size() != 1){
@@ -43,7 +45,7 @@ public class DatabaseWrappers {
     public List<AddPrivilege> getAddPrivilege(Role role) {
         Long id = role.getId();
         Session session = SessionProvider.getSessionWithoutInterceptor();
-
+        session.clear();
         return session.createQuery("FROM AddPrivilege AD WHERE AD.role.id = " + Long.toString(id)).list();
     }
 }

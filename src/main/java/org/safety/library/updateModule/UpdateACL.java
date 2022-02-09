@@ -16,8 +16,8 @@ public class UpdateACL {
 
     public static void updateAfterDelete(String tableName, Long id) {
         Session session = SessionProvider.getSessionWithoutInterceptor();
+        session.clear();
         session.beginTransaction();
-
         List<AccessListRow> list = session.createQuery("FROM AccessListRow ").list();
         AtomicLong idInACL = new AtomicLong();
         list.forEach(accessListRow -> {
@@ -34,6 +34,7 @@ public class UpdateACL {
     public static void updateAfterInsert(String tableName, int id) {
         Transaction tx = session.getTransaction();
         session = SessionProvider.getSessionWithoutInterceptor();
+        session.clear();
         session.beginTransaction();
         List<Role> roles = session.createQuery("FROM Role ").list();
         roles.forEach(role -> {

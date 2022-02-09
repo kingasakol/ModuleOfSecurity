@@ -94,7 +94,7 @@ public class QueryInterceptor extends EmptyInterceptor {
                 if (!privilegesMap.canCreate()) {
                     throw new RuntimeException("Insert Denied");
                 }
-                //UpdateACL.updateAfterInsert(tableName, idForInsert);
+                UpdateACL.updateAfterInsert(tableName, idForInsert);
             }
             case UPDATE -> {
                 AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
@@ -107,7 +107,7 @@ public class QueryInterceptor extends EmptyInterceptor {
                 if (!accessListRow.isCanDelete()) {
                     throw new RuntimeException("Delete Denied");
                 }
-                //UpdateACL.updateAfterDelete(tableName, magickId);
+                UpdateACL.updateAfterDelete(tableName, magickId);
             }
         }
         return super.onPrepareStatement(sql);
