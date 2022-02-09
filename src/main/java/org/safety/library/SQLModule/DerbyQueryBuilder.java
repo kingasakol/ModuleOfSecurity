@@ -73,29 +73,38 @@ public class DerbyQueryBuilder implements Builder {
     }
 
     @Override
-    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql) throws Exception {
+    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql, String tableNameOriginal) throws Exception {
         String result = "";
         String idColumnName = "";
         if (accessListRows.size() > 0) {
             idColumnName = getIDColumnName(accessListRows.get(0).getTableName());
         }
+        String tableName = tableNameOriginal.toLowerCase(Locale.ROOT);
+        if (tableName.length() > 10) {
+            tableName = tableName.substring(0, 10);
+        }
         for (AccessListRow accessListRow : accessListRows) {
-            String tableName = accessListRow.getTableName().toLowerCase(Locale.ROOT);
-            if (tableName.length() > 10) {
-                tableName = tableName.substring(0, 10);
-            }
             result += " " + tableName + "0_." + idColumnName + " = " + accessListRow.getProtectedDataId() + " or ";
         }
         if (!alreadyHasWhereClause(sql)) {
             result = " where " + result;
-            result = DerbyQueryBuilder.removeSuffix(result, "or ");
+            result = DerbyQueryBuilder.removeSuffix(result, " or ");
+            if(accessListRows.size() == 0){
+                result += " 1=0 or "+tableName+"0_."+getIDColumnName(tableNameOriginal)+"=1";
+            }
         }
+        else{
+            if(accessListRows.size() == 0){
+                result += " "+tableName+"0_."+getIDColumnName(tableNameOriginal)+"=1 or 1=0 and ";
+            }
+        }
+
         return result;
     }
 
     @Override
-    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql) throws Exception {
+    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql, String tableName) throws Exception {
         String[] splitedSql = splitStringOnAdditionPlace(sql);
-        return splitedSql[0] + prepareSQLAddition(accessListRows, sql) + splitedSql[1];
+        return splitedSql[0] + prepareSQLAddition(accessListRows, sql, tableName) + splitedSql[1];
     }
 }

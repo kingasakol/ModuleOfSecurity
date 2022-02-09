@@ -25,7 +25,7 @@ public interface Builder {
      * Example: If role has access to the rows with id [1, 4, 5],  there should be prepared this kind
      * of addition: "WHERE table.id = 1 AND table.id = 4 AND table.id = 5"
      */
-    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql) throws Exception;
+    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql, String tableNameOriginal) throws Exception;
 
-    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql) throws Exception;
+    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql, String tableName) throws Exception;
 }

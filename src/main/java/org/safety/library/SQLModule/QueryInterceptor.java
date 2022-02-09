@@ -85,7 +85,7 @@ public class QueryInterceptor extends EmptyInterceptor {
             case SELECT -> {
                 QueryMaster master = new QueryMaster();
                 try {
-                    return master.buildQuery(sql, privilegesMap);
+                    return master.buildQuery(sql, privilegesMap, QueryProcessor.getUsedTable(sql));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -140,4 +140,11 @@ public class QueryInterceptor extends EmptyInterceptor {
         return false;
     }
 
+    @Override
+    public boolean onLoad(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
+        for(int i = 0; i < state.length; i++){
+            System.out.println("onLoad:            "+state[i]+" "+propertyNames[i]+" "+types[i]);
+        }
+        return false;
+    }
 }

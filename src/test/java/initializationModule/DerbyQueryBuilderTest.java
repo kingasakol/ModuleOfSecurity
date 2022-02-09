@@ -31,12 +31,12 @@ public class DerbyQueryBuilderTest {
     @Test
     public void constructsValidSQLQuery() throws Exception {
         Builder builder = new DerbyQueryBuilder();
-        assertEquals(builder.returnPreparedSQL(accessListRowList, exampleSQL), resultForExampleSQL);
+        assertEquals(builder.returnPreparedSQL(accessListRowList, exampleSQL, ""), resultForExampleSQL);
     }
 
     @Test
     public void constructValidSQLQueryWithWhere() throws Exception{
         Builder builder = new DerbyQueryBuilder();
-        assertEquals(builder.returnPreparedSQL(accessListRowList, exampleSQLWithWhere), resultForExampleSQLWithWhere);
+        assertEquals(builder.returnPreparedSQL(accessListRowList, exampleSQLWithWhere, ""), resultForExampleSQLWithWhere);
     }
 }
