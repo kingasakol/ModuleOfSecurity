@@ -7,9 +7,11 @@ import org.hibernate.type.Type;
 
 import org.safety.library.RolesPrivilegesMap.RolesPrivilegesMap;
 import org.safety.library.hibernate.SessionProvider;
+import org.safety.library.initializationModule.utils.Authenticator;
 import org.safety.library.initializationModule.utils.DatabaseWrappers;
 import org.safety.library.models.AccessListRow;
 import org.safety.library.models.HibernateSelect;
+import org.safety.library.models.Role;
 import org.safety.library.updateModule.UpdateACL;
 import org.safety.library.annotations.ACL;
 
@@ -42,7 +44,6 @@ public class QueryInterceptor extends EmptyInterceptor {
         List<HibernateSelect> hibernateSelects = session.createQuery("FROM HibernateSelect ").list();
         return hibernateSelects.stream()
                 .map(HibernateSelect::getEntityName)
-                .map(String::toLowerCase)
                 .toList();
     }
 
@@ -67,7 +68,7 @@ public class QueryInterceptor extends EmptyInterceptor {
             return sql;
         }
 
-        String tableName = QueryProcessor.getUsedTable(sql).toLowerCase();
+        String tableName = QueryProcessor.getUsedTable(sql);
         if (goTrough.contains(tableName)) {
             return super.onPrepareStatement(sql);
         }
@@ -79,30 +80,32 @@ public class QueryInterceptor extends EmptyInterceptor {
         }
 
         QueryType type = QueryProcessor.getQueryType(sql);
-        RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName, type);
 
         switch (type) {
             case SELECT -> {
                 QueryMaster master = new QueryMaster();
                 try {
-                    return master.buildQuery(sql, privilegesMap, QueryProcessor.getUsedTable(sql));
+                    return master.buildQuery(sql, QueryProcessor.getUsedTable(sql), Authenticator.getInstance().getRole());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             case INSERT -> {
+                RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName, type);
                 if (!privilegesMap.canCreate()) {
                     throw new RuntimeException("Insert Denied");
                 }
                 UpdateACL.updateAfterInsert(tableName, idForInsert);
             }
             case UPDATE -> {
+                RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName, type);
                 AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
                 if (!accessListRow.isCanUpdate()) {
                     throw new RuntimeException("Update Denied");
                 }
             }
             case DELETE -> {
+                RolesPrivilegesMap privilegesMap = new RolesPrivilegesMap(databaseWrappers, tableName, type);
                 AccessListRow accessListRow = privilegesMap.getRowPrivilegesById(magickId);
                 if (!accessListRow.isCanDelete()) {
                     throw new RuntimeException("Delete Denied");
@@ -137,14 +140,6 @@ public class QueryInterceptor extends EmptyInterceptor {
     @Override
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
         magickId = (long) id;
-        return false;
-    }
-
-    @Override
-    public boolean onLoad(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-        for(int i = 0; i < state.length; i++){
-            System.out.println("onLoad:            "+state[i]+" "+propertyNames[i]+" "+types[i]);
-        }
         return false;
     }
 }

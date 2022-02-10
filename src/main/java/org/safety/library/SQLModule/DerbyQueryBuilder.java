@@ -2,6 +2,7 @@ package org.safety.library.SQLModule;
 
 import org.safety.library.initializationModule.utils.ClassFinder;
 import org.safety.library.models.AccessListRow;
+import org.safety.library.models.Role;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -57,54 +58,41 @@ public class DerbyQueryBuilder implements Builder {
     }
 
     @Override
-    public String[] splitStringOnAdditionPlace(String sql) {
-        for (String word : splitQueryOnSpaces(sql)) {
-            if (word.toLowerCase(Locale.ROOT).equals("order")) {
-                String[] result = sql.split("order");
-                result[1] = " order " + result[1];
-                return result;
-            } else if (word.toLowerCase(Locale.ROOT).equals("where")) {
-                String[] result = sql.split("where");
-                result[0] = result[0] + " where ";
-                return result;
-            }
-        }
-        return new String[]{sql, ""};
-    }
-
-    @Override
-    public String prepareSQLAddition(List<AccessListRow> accessListRows, String sql, String tableNameOriginal) throws Exception {
-        String result = "";
-        String idColumnName = "";
-        if (accessListRows.size() > 0) {
-            idColumnName = getIDColumnName(accessListRows.get(0).getTableName());
-        }
-        String tableName = tableNameOriginal.toLowerCase(Locale.ROOT);
-        if (tableName.length() > 10) {
-            tableName = tableName.substring(0, 10);
-        }
-        for (AccessListRow accessListRow : accessListRows) {
-            result += " " + tableName + "0_." + idColumnName + " = " + accessListRow.getProtectedDataId() + " or ";
-        }
-        if (!alreadyHasWhereClause(sql)) {
-            result = " where " + result;
-            result = DerbyQueryBuilder.removeSuffix(result, " or ");
-            if(accessListRows.size() == 0){
-                result += " 1=0 or "+tableName+"0_."+getIDColumnName(tableNameOriginal)+"=1";
-            }
+    public String addACLJoin(String sql) {
+        String[] splittedForACLJoin = new String[2];
+        if(!alreadyHasWhereClause(sql)){
+            splittedForACLJoin[0] = sql;
+            splittedForACLJoin[1] = "";
         }
         else{
-            if(accessListRows.size() == 0){
-                result += " "+tableName+"0_."+getIDColumnName(tableNameOriginal)+"=1 or 1=0 and ";
-            }
+            splittedForACLJoin = sql.split("where");
+            splittedForACLJoin[1] = " where " + splittedForACLJoin[1];
         }
+        return splittedForACLJoin[0] + " , AccessList accesslist0_ " + splittedForACLJoin[1];
 
-        return result;
     }
 
     @Override
-    public String returnPreparedSQL(List<AccessListRow> accessListRows, String sql, String tableName) throws Exception {
-        String[] splitedSql = splitStringOnAdditionPlace(sql);
-        return splitedSql[0] + prepareSQLAddition(accessListRows, sql, tableName) + splitedSql[1];
+    public String addACLCondition(String sql, String tableName, Role role) throws Exception {
+        String table = tableName.toLowerCase(Locale.ROOT);
+        if (tableName.length() > 10) {
+            table = tableName.substring(0, 10);
+        }
+        String[] splittedForACLCondition = new String[2];
+        if(!alreadyHasWhereClause(sql)){
+            splittedForACLCondition[0] = sql + " where ";
+            splittedForACLCondition[1] = "";
+        }
+        else{
+            splittedForACLCondition = sql.split("where");
+            splittedForACLCondition[0] = splittedForACLCondition[0] + " where ( ";
+            splittedForACLCondition[1] = " and  "+splittedForACLCondition[1] + " ) ";
+        }
+        return splittedForACLCondition[0] + " accesslist0_.protecteddataid = "+table+"0_."+getIDColumnName(tableName)+" and accesslist0_.role_id="+role.getId()+" and accesslist0_.tablename=\'"+tableName +"\'"+" and accesslist0_.canread=1"+ splittedForACLCondition[1];
+    }
+
+    @Override
+    public String getModifiedSQL(String sql, String tableName, Role role) throws Exception {
+        return addACLJoin(addACLCondition(sql, tableName, role));
     }
 }
